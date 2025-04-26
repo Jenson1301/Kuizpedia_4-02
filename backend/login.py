@@ -2,12 +2,8 @@ from flask import Flask, redirect, url_for, render_template, request
 
 app = Flask(__name__)
 
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/login')
 def login():
-    if request.method == 'POST':
-        user = request.form['user']
-        email = request.form['email']
-        password = request.form['password']
     return render_template('login.html')
     # opens the login page
 
