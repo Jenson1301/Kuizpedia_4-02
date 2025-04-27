@@ -37,3 +37,5 @@ def get_kuiz(kuiz_id):
             'title': kuiz['title'],
             'questions': questions
         })
+    else:
+        return jsonify({'error': 'Kuiz not found'}), 404
