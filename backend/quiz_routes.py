@@ -1,41 +1,37 @@
 from flask import Blueprint, jsonify
 
-quiz = Blueprint('quiz', __name__)
+# Create a Blueprint for the quiz-related routes
+kuiz_bp = Blueprint('kuiz', __name__)  # This is where 'kuiz_bp' is defined.
 
-# Sample quiz data
-quizzes = {
-    1: {
-        'title': 'General Knowledge Kuiz',
-        'questions': [
-            {
-                'question': 'What is the capital of France?',
-                'options': ['Paris', 'London', 'Rome', 'Berlin'],
-                'answer': 'Paris'
-            },
-            {
-                'question': 'What is 2 + 2?',
-                'options': ['3', '4', '5', '6'],
-                'answer': '4'
-            }
+# Sample Data (same as before)
+quizzes = [
+    {
+        "id": 1,
+        "name": "Math Quiz",
+        "questions": [
+            {"question": "What is 2 + 2?", "options": ["3", "4", "5", "6"], "answer": "4"},
+            {"question": "What is 10 - 3?", "options": ["7", "6", "5", "8"], "answer": "7"}
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Science Quiz",
+        "questions": [
+            {"question": "What is the chemical symbol for water?", "options": ["H2O", "O2", "CO2", "N2"], "answer": "H2O"},
+            {"question": "What planet is known as the Red Planet?", "options": ["Earth", "Mars", "Venus", "Jupiter"], "answer": "Mars"}
         ]
     }
-}
+]
 
-# Route to list all kuizzes
-@quiz.route('/kuizzes', methods=['GET'])
-def get_kuizzes():
-    kuiz_titles = {kid: data['title'] for kid, data in kuizzes.items()}
-    return jsonify(kuiz_titles)
+# Define routes for the quiz data
+@kuiz_bp.route('/quizzes', methods=['GET'])
+def get_quizzes():
+    return jsonify([quiz["name"] for quiz in quizzes])
 
-# Route to get a specific kuiz
-@quiz.route('/kuiz/<int:kuiz_id>', methods=['GET'])
-def get_kuiz(kuiz_id):
-    kuiz = kuizzes.get(kuiz_id)
-    if kuiz:
-        questions = [{'question': q['question'], 'options': q['options']} for q in kuiz['questions']]
-        return jsonify({
-            'title': kuiz['title'],
-            'questions': questions
-        })
+@kuiz_bp.route('/quiz/<int:quiz_id>', methods=['GET'])
+def get_quiz(quiz_id):
+    quiz = next((quiz for quiz in quizzes if quiz["id"] == quiz_id), None)
+    if quiz:
+        return jsonify(quiz)
     else:
-        return jsonify({'error': 'Kuiz not found'}), 404
+        return jsonify({"message": "Quiz not found"}), 404
