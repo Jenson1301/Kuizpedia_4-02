@@ -1,17 +1,80 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.secret_key = 'satgi buat balik'
 
-@app.route('/login')
-def login():
-    return render_template('login.html')
-    # opens the login page
+# CONFIGURE SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
+# DATABASE
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+# HOME ROUTE
 @app.route('/')
-def otherlogin():
-    return redirect(url_for('login'))
-    # if user enter url without /login, page still goes to /login page
+def home():
+    if 'username' in session:
+        return redirect(url_for('dashboard'))
+    return render_template('login.html')
 
-if __name__ == '__main__':
+# LOGIN ROUTE
+@app.route('/login', methods=["POST"])
+def login():
+    email = request.form['email']
+    username = request.form['username']
+    password = request.form['password']
+    user = User.query.filter_by(username=username).first()
+    if user and user.check_password(password):
+        session['username'] = username
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template('login.html')
+
+# SIGNUP ROUTE
+@app.route('/signup', methods=["POST"])
+def signup():
+    email = request.form['email']
+    username = request.form['username']
+    password = request.form['password']
+    user = User.query.filter_by(username=username).first()
+    if user:
+        return render_template('login.html', error='User already registered.')
+    else:
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+        session['username'] = username
+        return redirect(url_for('dashboard'))
+
+# DASHBOARD ROUTE
+@app.route('/dashboard')
+def dashboard():
+    if 'username' in session:
+        return render_template('dashboard.html', username=session['username'])
+    return redirect(url_for('home'))
+
+# LOGOUT ROUTE
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('home'))
+
+
+if __name__ in '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
-    # page updated automatically without need to restart after code changes
