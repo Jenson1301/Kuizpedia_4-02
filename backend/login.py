@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
@@ -12,8 +12,7 @@ db = SQLAlchemy(app)
 
 # DATABASE
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
 
@@ -28,37 +27,56 @@ class User(db.Model):
 def home():
     if 'username' in session:
         return redirect(url_for('dashboard'))
-    return render_template('login.html')
+    else:
+        return redirect(url_for('login'))
 
 # LOGIN ROUTE
+@app.route('/login', methods=["GET"])
+def login1():
+    return render_template('login.html')
+
 @app.route('/login', methods=["POST"])
 def login():
-    email = request.form['email']
-    username = request.form['username']
-    password = request.form['password']
-    user = User.query.filter_by(username=username).first()
-    if user and user.check_password(password):
-        session['username'] = username
-        return redirect(url_for('dashboard'))
-    else:
-        return render_template('login.html')
-
-# SIGNUP ROUTE
-@app.route('/signup', methods=["POST"])
-def signup():
-    email = request.form['email']
     username = request.form['username']
     password = request.form['password']
     user = User.query.filter_by(username=username).first()
     if user:
-        return render_template('login.html', error='User already registered.')
+        if user and user.check_password(password):
+            session['username'] = username
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Wrong username or password.')
+            return render_template('login.html')
     else:
-        new_user = User(username=username, email=email)
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-        session['username'] = username
-        return redirect(url_for('dashboard'))
+        flash('Please sign up to continue.')
+        return redirect(url_for('signup'))
+
+# SIGNUP ROUTE
+@app.route('/signup', methods=['GET'])
+def signup1():
+    return render_template('signup.html')
+
+@app.route('/signup', methods=["POST"])
+def signup():
+    render_template('signup.html')
+    email = request.form['email']
+    username = request.form['username']
+    password = request.form['password']
+    confirmpassword = request.form['confirmpassword']
+    user = User.query.filter_by(email=email).first()
+    if user:
+        flash('User already registered.')
+        return redirect(url_for('login'))
+    else:
+        if confirmpassword != password:
+            flash('Passwords do not match.')
+            return redirect(url_for('signup'))
+        else:
+            new_user = User(username=username, email=email)
+            new_user.set_password(password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('login'))
 
 # DASHBOARD ROUTE
 @app.route('/dashboard')

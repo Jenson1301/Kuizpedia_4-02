@@ -2,15 +2,18 @@
 
 {% block body %}
 
+{% for message in get_flashed_messages() %}
+    {{message}}
+{% endfor %}
+
 <div class="container">
     <h1>Welcome</h1>
     <form id = 'auth-form' action="{{url_for('login')}}" method = 'post'>
-        <input type="email" name="email" placeholder="email" class="input-field"/>
-        <input type="text" name="username" placeholder="username" class="input-field"/>
-        <input type="password" name="password" placeholder="password" class="input-field"/>
+        <input type="text" name="username" placeholder="username" class="input-field" required/>
+        <input type="password" name="password" placeholder="password" class="input-field" required/>
         <input type="submit" value="Login" class="btn btn-login" onclick="setActionForm('login')"/>
-        <input type="submit" value="Signup" class="btn btn-signup" onclick="setActionForm('signup')"/>
-        <input type="button" value="Reset Password" class="btn btn-resetpassword"/>
+        <input type="button" value="Reset Password" class="btn btn-resetpassword" onclick="setActionForm('reset')"/>
+        <input type="button" value="Signup" class="btn btn-signup" onclick="window.location.href=`{{url_for('signup1')}}`"/>
     </form>
 </div>
 
@@ -21,10 +24,9 @@
             form.action = "{{url_for('login')}}";
             form.method = "post";
             form.submit();
-        } else if ( action === "signup"){
-            form.action = "{{url_for('signup')}}";
-            form.method = "post";
-            form.submit();
+        }
+        else if (action === "reset"){
+            /////////////////////////////////////////////////
         }
     }
 
