@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block body%}
+<div class="container">
+    <h1>Welcome, {{username}}</h1>
+    <p>Welcome to your dashboard!</p>
+    <input type="button" value="Logout" class="btn-logout" onclick="window.location.href=`{{url_for('logout')}}`"/>
+</div>
+{% endblock %}
