@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+import re
 
 app = Flask(__name__)
 app.secret_key = 'satgi buat balik'
@@ -11,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # DATABASE
-class User(db.Model):
+class User(db.Model):     #####################dk why can submit null form###################
     email = db.Column(db.String, primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
@@ -68,14 +69,19 @@ def signup():
         flash('User already registered.')
         return redirect(url_for('login'))
     else:
-        if confirmpassword != password:
-            flash('Passwords do not match.')
-            return redirect(url_for('signup'))
+        check = re.search(r'mmu.edu.my', email)
+        if check:
+            if confirmpassword != password:
+                flash('Passwords do not match.')
+                return redirect(url_for('signup'))
+            else:
+                new_user = User(username=username, email=email)
+                new_user.set_password(password)
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect(url_for('login'))
         else:
-            new_user = User(username=username, email=email)
-            new_user.set_password(password)
-            db.session.add(new_user)
-            db.session.commit()
+            flash('Only email addresses with the MMU domain can use this app.')
             return redirect(url_for('login'))
 
 # DASHBOARD ROUTE
