@@ -66,7 +66,7 @@ def create_question():
         question_text=question_text,
         options=options,
         answer=answer,
-        kuiz_id=1  # You can associate it with a quiz (use the appropriate Kuiz ID)
+        kuiz_id=1  
     )
     
     # Add the new question to the database

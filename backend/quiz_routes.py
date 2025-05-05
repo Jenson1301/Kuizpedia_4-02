@@ -54,7 +54,7 @@ def create_question():
         question_text=question_text,
         options=options,
         answer=answer,
-        kuiz_id=1  # You can assign the question to a specific quiz, for example, ID=1
+        kuiz_id=1  
     )
 
     # Add the question to the session and commit it to the database
@@ -79,5 +79,13 @@ def edit_question(question_id):
 
         # Redirect back to the home page after editing
         return redirect(url_for('home'))
+
+
+@kuiz_bp.route('/delete-question/<int:question_id>', methods=['GET'])
+def delete_question(question_id):
+    question = Question.query.get_or_404(question_id)
+    db.session.delete(question)
+    db.session.commit()
+    return redirect(url_for('home'))
 
     return render_template('edit_question.html', question=question)
