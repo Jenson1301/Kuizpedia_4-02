@@ -25,10 +25,59 @@ def submit_quiz():
     score = 0
     # Loop through each question and check if the answer is correct
     all_questions = Question.query.all()
-    
+
     for question in all_questions:
         user_answer = request.form.get(f"question_{question.id}")
-        if user_answer == question.answer:
+        correct_answer = question.answer
+
+        print(f"[DEBUG] Q{question.id}: '{question.question_text}'")
+        print(f"[DEBUG] - Correct: '{correct_answer}' | User: '{user_answer}'")
+
+        if user_answer and user_answer.strip() == correct_answer.strip():
             score += 1
 
-    return f'Your score is: {score} out of {len(all_questions)}'
+    return render_template('score_result.html', score=score, total=len(all_questions))
+
+
+@kuiz_bp.route('/create-question', methods=['GET'])
+def create_question_form():
+    return render_template('create_question.html')
+
+@kuiz_bp.route('/create-question', methods=['POST'])
+def create_question():
+    question_text = request.form['question_text']
+    options = request.form['options'].split(',')  # Split the comma-separated options into a list
+    answer = request.form['answer']
+    
+    # Create a new question object
+    new_question = Question(
+        question_text=question_text,
+        options=options,
+        answer=answer,
+        kuiz_id=1  # You can assign the question to a specific quiz, for example, ID=1
+    )
+
+    # Add the question to the session and commit it to the database
+    db.session.add(new_question)
+    db.session.commit()
+
+    return redirect(url_for('home'))  # Redirect back to the home page
+
+@kuiz_bp.route('/edit-question/<int:question_id>', methods=['GET', 'POST'])
+def edit_question(question_id):
+    question = Question.query.get_or_404(question_id)  # Fetch the question by ID
+
+    if request.method == 'POST':
+        # Get new values from the form
+        new_answer = request.form['answer']  # The new correct answer
+
+        # Update the question's answer
+        question.answer = new_answer
+        
+        # Commit the changes to the database
+        db.session.commit()
+
+        # Redirect back to the home page after editing
+        return redirect(url_for('home'))
+
+    return render_template('edit_question.html', question=question)

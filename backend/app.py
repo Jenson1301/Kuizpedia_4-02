@@ -32,13 +32,13 @@ def add_sample_data():
                 question_text="What is 2 + 2?",
                 options=["3", "4", "5", "6"],
                 answer="4",
-                kuiz_id=existing_quiz.id
+                kuiz_id=existing_quiz
             )
             q2 = Question(
                 question_text="What is 10 - 3?",
                 options=["7", "6", "5", "8"],
                 answer="7",
-                kuiz_id=existing_quiz.id
+                kuiz_id=existing_quiz
             )
             db.session.add_all([q1, q2])
             db.session.commit()
@@ -51,21 +51,29 @@ def create_tables():
         db.create_all() #ensure table is created 
         print("Tables created!") #confirms tables is created
 
-@app.route('/submit-quiz', methods=['POST'])
-def submit_quiz():
-    user_answers = {}
-    for quiz in Question.query.all():
-        # Get the user's selected answer for each question
-        selected_answer = request.form.get(f"question_{quiz.id}")
-        user_answers[quiz.id] = selected_answer
-        
-        # You can now compare the answers and save or process the result
-        if selected_answer == quiz.answer:
-            print(f"Correct answer for question {quiz.id}")
-        else:
-            print(f"Wrong answer for question {quiz.id}")
+@app.route('/create-question', methods=['GET'])
+def create_question_form():
+    return render_template('create_question.html')
+
+@app.route('/create-question', methods=['POST'])
+def create_question():
+    question_text = request.form['question_text']
+    options = request.form['options'].split(',')  # Convert comma-separated string to a list
+    answer = request.form['answer']
     
-    return redirect(url_for('home'))  # Redirect to the homepage 
+    # Create the new question
+    new_question = Question(
+        question_text=question_text,
+        options=options,
+        answer=answer,
+        kuiz_id=1  # You can associate it with a quiz (use the appropriate Kuiz ID)
+    )
+    
+    # Add the new question to the database
+    db.session.add(new_question)
+    db.session.commit()
+
+    return redirect(url_for('home'))  # Redirect back to the home page after adding the question
 
 if __name__ == '__main__':
     create_tables()

@@ -13,7 +13,7 @@
 
     <h2>Answer the following questions:</h2>
 
-    <form action="/submit-quiz" method="POST">
+    <form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
         {% for quiz in quizzes %}
             <div class="quiz-item">
                 <h3>{{ quiz.question_text }}</h3>
@@ -28,10 +28,20 @@
                 </div>
             </div>
             <hr>
+    
+            <a href="{{ url_for('kuiz.edit_question', question_id=quiz.id) }}">
+                <button type="button">Edit</button>
+            </a>
         {% endfor %}
-
+    
         <button type="submit">Submit Answers</button>
     </form>
 
+    <br>
+
+    <!-- Button to go to Create Question page -->
+    <a href="/create-question">
+        <button>Create New Question</button>
+    </a>
 </body>
 </html>
