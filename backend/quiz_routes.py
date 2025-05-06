@@ -65,27 +65,20 @@ def create_question():
 
 @kuiz_bp.route('/edit-question/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = Question.query.get_or_404(question_id)  # Fetch the question by ID
+    question = Question.query.get_or_404(question_id)
 
     if request.method == 'POST':
-        # Get new values from the form
-        new_answer = request.form['answer']  # The new correct answer
-
-        # Update the question's answer
+        new_answer = request.form['answer']
         question.answer = new_answer
-        
-        # Commit the changes to the database
         db.session.commit()
-
-        # Redirect back to the home page after editing
         return redirect(url_for('home'))
+    
+    return render_template('edit_question.html', question=question)
 
 
 @kuiz_bp.route('/delete-question/<int:question_id>', methods=['GET'])
 def delete_question(question_id):
     question = Question.query.get_or_404(question_id)
     db.session.delete(question)
-    db.session.commit()
+    db.session.commit()     
     return redirect(url_for('home'))
-
-    return render_template('edit_question.html', question=question)
