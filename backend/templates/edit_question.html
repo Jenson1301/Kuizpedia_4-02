@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+</head>
+<body>
+    <h1>Edit Question</h1>
+
+    <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="POST">
+        <div>
+            <label for="question_text">Question:</label>
+            <input type="text" id="question_text" name="question_text" value="{{ question.question_text }}" disabled>
+        </div>
+        
+        <div>
+            <label for="options">Options:</label>
+            <input type="text" id="options" name="options" value="{{ question.options | join(', ') }}" disabled>
+        </div>
+
+        <div>
+            <label for="answer">Correct Answer:</label>
+            <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
+        </div>
+
+        <button type="submit">Submit Changes</button>
+    </form>
+
+    <br>
+    <a href="/">Go Back</a>
+</body>
+</html>
