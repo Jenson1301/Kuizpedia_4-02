@@ -11,11 +11,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'satgi buat balik'
 
 # MAILING SETUP
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io' #
+#app.config['MAIL_SERVER'] = 'smtp.gmail.com' #
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['USERNAME'] = 'kuizpedia402@gmail.com'
-app.config['PASSWORD'] = 'Kuizpedia402(MiniITProject)'
+app.config['USERNAME'] = 'smtp@mailtrap.io' #
+app.config['PASSWORD'] = '71251c7ceb8c095c29eb0b2219fb885c' #
+#app.config['USERNAME'] = 'kuizpedia@gmail.com' #
+#app.config['PASSWORD'] = 'Kuizpedia402(MiniITProject)' #
 mail = Mail(app)
 
 # SQLAlchemy SETUP
@@ -41,19 +44,20 @@ class User(db.Model):     #####################dk why can submit null form######
         return seq.dumps({'user_id': self.id})
     
     @staticmethod
-    def verify_token(token, expiration = 300):
+    def verify_token(token):
         seq = Serializer(app.config['SECRET_KEY'])
         try:
-            user_id = seq.loads(token, max_age = expiration)['user_id']
+            url = seq.loads(token, max_age = 60)
         except:
             return None
-        return User.query.get(user_id)
+        return url['user_id']
 
 def sendResetMail(user):
-    token = User.create_token(user)
-    message = Message('Kuizpedia - Password Reset Request', recipients = user, sender = 'noreply@kuizpedia.com', body = '''
-{url_for(reset)}
+    token = User.create_token(user)                                                              ###################
+    message = Message('Kuizpedia - Password Reset Request', recipients = [user.email], sender = 'smtp@mailtrap.io', body = '''
+{url_for('reset', token = token, _external = True)}
 ''')
+    mail.send(message)
 
 # HOME ROUTE
 @app.route('/')
@@ -91,7 +95,7 @@ def signup1():
 
 @app.route('/signup', methods=["POST"])
 def signup():
-    render_template('signup.html') ###################################################################
+    render_template('signup.html')
     email = request.form['email']
     username = request.form['username']
     password = request.form['password']
