@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Choose Timer</title>
+</head>
+<body>
+    <h1>Start Quiz: {{ category.name }}</h1>
+
+    <form action="{{ url_for('kuiz.start_quiz') }}" method="GET">
+        <input type="hidden" name="category_id" value="{{ category.id }}">
+
+        <label for="timer">Select time limit:</label>
+        <select name="timer" id="timer" required>
+            <option value="30">30 seconds</option>
+            <option value="60">1 minute</option>
+            <option value="90">1 minute 30 seconds</option>
+            <option value="120">2 minutes</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Start Quiz</button>
+    </form>
+</body>
+</html>

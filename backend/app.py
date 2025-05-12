@@ -3,7 +3,7 @@ from quiz_routes import kuiz_bp
 from format import db, Question, Kuiz
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.kuizpedia'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kuizpedia.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -13,8 +13,7 @@ app.register_blueprint(kuiz_bp)
 
 @app.route('/')
 def home():
-    quizzes = Question.query.all()  # Fetch question from database
-    return render_template('index.html', quizzes=quizzes)
+    return redirect(url_for('kuiz.show_categories'))
 
 @app.route('/add-sample-data', methods=['GET'])
 def add_sample_data():
@@ -50,30 +49,6 @@ def create_tables():
     with app.app_context():
         db.create_all() #ensure table is created 
         print("Tables created!") #confirms tables is created
-
-@app.route('/create-question', methods=['GET'])
-def create_question_form():
-    return render_template('create_question.html')
-
-@app.route('/create-question', methods=['POST'])
-def create_question():
-    question_text = request.form['question_text']
-    options = request.form['options'].split(',')  # Convert comma-separated string to a list
-    answer = request.form['answer']
-    
-    # Create the new question
-    new_question = Question(
-        question_text=question_text,
-        options=options,
-        answer=answer,
-        kuiz_id=1  
-    )
-    
-    # Add the new question to the database
-    db.session.add(new_question)
-    db.session.commit()
-
-    return redirect(url_for('home'))  # Redirect back to the home page after adding the question
 
 if __name__ == '__main__':
     create_tables()

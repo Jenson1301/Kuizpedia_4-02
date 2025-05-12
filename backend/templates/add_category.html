@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Category</title>
+</head>
+<body>
+    <h1>Add a New Category</h1>
+
+    <form action="{{ url_for('kuiz.add_category') }}" method="POST">
+        <label for="category_name">Category Name</label>
+        <input type="text" id="category_name" name="category_name" required>
+        <button type="submit">Add Category</button>
+    </form>
+
+    <a href="{{ url_for('kuiz.show_categories') }}">Back to Categories</a>
+</body>
+</html>

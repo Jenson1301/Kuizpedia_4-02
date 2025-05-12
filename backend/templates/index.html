@@ -11,6 +11,8 @@
         <p>Your fun quiz platform</p>
     </header>
 
+    <div id="timer" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;"></div>
+
     <h2>Answer the following questions:</h2>
 
     <form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
@@ -29,13 +31,6 @@
             </div>
             <hr>
     
-            <a href="{{ url_for('kuiz.edit_question', question_id=quiz.id) }}">
-                <button type="button">Edit</button>
-            </a>
-
-            <a href="{{ url_for('kuiz.delete_question', question_id=quiz.id) }}" onclick="return confirm('Are you sure you want to delete this question?');">
-                <button type="button">Delete</button>
-            </a>
         {% endfor %}
     
         <button type="submit">Submit Answers</button>
@@ -43,9 +38,21 @@
 
     <br>
 
-    <a href="/create-question">
-        <button>Create New Question</button>
-    </a>
+    <script>
+    let timeLeft = Number("{{ timer | default(30) }}");
+    const timerDisplay = document.getElementById("timer");
+
+    const countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            alert("Time's up! Submitting quiz...");
+            document.querySelector('form').submit();
+        } else {
+            timerDisplay.textContent = `Time Left: ${timeLeft} seconds`;
+            timeLeft--;
+        }
+    }, 1000);
+</script>
 
 </body>
 </html>
