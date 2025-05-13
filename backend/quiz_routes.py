@@ -123,6 +123,7 @@ def edit_category(category_id):
 @kuiz_bp.route('/delete-category/<int:category_id>', methods=['GET'])
 def delete_category(category_id):
     category = Kuiz.query.get_or_404(category_id)
+    Question.query.filter_by(kuiz_id=category.id).delete()
     db.session.delete(category)
     db.session.commit()
     return redirect(url_for('kuiz.show_categories'))
