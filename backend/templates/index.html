@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuizpedia</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Kuizpedia!</h1>
+        <p>Your fun quiz platform</p>
+    </header>
+
+    <div id="timer" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;"></div>
+
+    <h2>Answer the following questions:</h2>
+
+    <form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
+        {% for quiz in quizzes %}
+            <div class="quiz-item">
+                <h3>{{ quiz.question_text }}</h3>
+                <div>
+                    {% for option in quiz.options %}
+                        <input type="radio" 
+                               id="q{{ quiz.id }}_{{ loop.index }}" 
+                               name="question_{{ quiz.id }}" 
+                               value="{{ option }}" required>
+                        <label for="q{{ quiz.id }}_{{ loop.index }}">{{ option }}</label><br>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+    
+        {% endfor %}
+    
+        <button type="submit">Submit Answers</button>
+    </form>
+
+    <br>
+
+    <script>
+    let timeLeft = Number("{{ timer | default(30) }}");
+    const timerDisplay = document.getElementById("timer");
+
+    const countdown = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            alert("Time's up! Submitting quiz...");
+            document.querySelector('form').submit();
+        } else {
+            timerDisplay.textContent = `Time Left: ${timeLeft} seconds`;
+            timeLeft--;
+        }
+    }, 1000);
+</script>
+
+</body>
+</html>

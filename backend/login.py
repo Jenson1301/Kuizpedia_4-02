@@ -1,9 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session, flash
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from itsdangerous import URLSafeTimedSerializer as Serializer
-from flask_mail import Mail, Message
-import re
+from flask import Flask, redirect, url_for, render_template, request
 
 app = Flask(__name__)
 
@@ -11,14 +6,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'satgi buat balik'
 
 # MAILING SETUP
-app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io' #
-#app.config['MAIL_SERVER'] = 'smtp.gmail.com' #
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['USERNAME'] = 'smtp@mailtrap.io' #
-app.config['PASSWORD'] = '71251c7ceb8c095c29eb0b2219fb885c' #
-#app.config['USERNAME'] = 'kuizpedia@gmail.com' #
-#app.config['PASSWORD'] = 'Kuizpedia402(MiniITProject)' #
+app.config['USERNAME'] = 'kuizpedia402@gmail.com'
+app.config['PASSWORD'] = 'Kuizpedia402(MiniITProject)'
 mail = Mail(app)
 
 # SQLAlchemy SETUP
@@ -44,20 +36,25 @@ class User(db.Model):     #####################dk why can submit null form######
         return seq.dumps({'user_id': self.id})
     
     @staticmethod
-    def verify_token(token):
+    def verify_token(token, expiration = 300):
         seq = Serializer(app.config['SECRET_KEY'])
         try:
-            url = seq.loads(token, max_age = 60)
+            user_id = seq.loads(token, max_age = expiration)['user_id']
         except:
             return None
-        return url['user_id']
+        return User.query.get(user_id)
 
 def sendResetMail(user):
+<<<<<<< HEAD
     token = User.create_token(user)                                                              ################
     message = Message('Kuizpedia - Password Reset Request', recipients = [user.email], sender = 'smtp@mailtrap.io', body = '''
 {url_for('reset', token = token, _external = True)}
+=======
+    token = User.create_token(user)
+    message = Message('Kuizpedia - Password Reset Request', recipients = user, sender = 'noreply@kuizpedia.com', body = '''
+{url_for(reset)}
+>>>>>>> 2596dc5e63520a1bb47c1e8784de1d723afa3e20
 ''')
-    mail.send(message)
 
 # HOME ROUTE
 @app.route('/')
@@ -95,7 +92,7 @@ def signup1():
 
 @app.route('/signup', methods=["POST"])
 def signup():
-    render_template('signup.html')
+    render_template('signup.html') ###################################################################
     email = request.form['email']
     username = request.form['username']
     password = request.form['password']
@@ -197,3 +194,4 @@ if __name__ in '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+    # page updated automatically without need to restart after code changes
