@@ -53,7 +53,7 @@ class User(db.Model):     #####################dk why can submit null form######
         return url['user_id']
 
 def sendResetMail(user):
-    token = User.create_token(user)                                                              ###################
+    token = User.create_token(user)                                                              ################
     message = Message('Kuizpedia - Password Reset Request', recipients = [user.email], sender = 'smtp@mailtrap.io', body = '''
 {url_for('reset', token = token, _external = True)}
 ''')
@@ -163,6 +163,35 @@ def reset(token):
         flash('Password changed successfully. Please login.')
         return redirect(url_for('login'))
     return render_template('reset.html')
+
+# ROUTES FOR MAIN
+@app.route('/study')
+def study():
+    return render_template('study.html')
+
+@app.route('/create')
+def create():
+    return render_template('create.html')
+
+@app.route('/ask')
+def ask():
+    return render_template('ask.html')
+
+@app.route('/study/<username>')
+def study_personal():
+    return
+
+@app.route('/study/public')
+def study_public():
+    return
+
+@app.route('/create/<username>')
+def create_personal():
+    return
+
+@app.route('/create/public')
+def create_public():
+    return
 
 if __name__ in '__main__':
     with app.app_context():
