@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
 from format import db, Question, Kuiz
 
 # Create a Blueprint for the quiz-related routes
@@ -93,7 +93,7 @@ def get_quiz_by_category(category_id):
 @kuiz_bp.route('/categories')
 def show_categories():
     categories = Kuiz.query.all()
-    return render_template('categories.html', categories=categories)
+    return render_template('categories.html', categories=categories, username=session['username'])
 
 @kuiz_bp.route('/add-category', methods=['GET'])
 def add_category_form():

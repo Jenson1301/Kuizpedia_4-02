@@ -1,19 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-from quiz_routes import kuiz_bp  
-from format import db, Question, Kuiz
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kuizpedia.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+from format import db, Question, Kuiz, app
 
 db.init_app(app)
-
-# Register the blueprint
-app.register_blueprint(kuiz_bp)
-
-@app.route('/')
-def home():
-    return redirect(url_for('kuiz.show_categories'))
 
 @app.route('/add-sample-data', methods=['GET'])
 def add_sample_data():
