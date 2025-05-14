@@ -1,54 +1,34 @@
-from flask import Flask, redirect, url_for, render_template, request
-
-app = Flask(__name__)
+from flask import Flask, redirect, url_for, render_template, request, session, flash
+from flask_mail import Mail, Message
+from format import User, db
+import re
+from quiz_routes import kuiz_bp  
+from app import app
 
 # SET KEY
 app.config['SECRET_KEY'] = 'satgi buat balik'
 
 # MAILING SETUP
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+#app.config['MAIL_SERVER'] = 'live.smtp.mailtrap.io' #
+app.config['MAIL_SERVER'] = 'smtp.gmail.com' #
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['USERNAME'] = 'kuizpedia402@gmail.com'
-app.config['PASSWORD'] = 'Kuizpedia402(MiniITProject)'
+#app.config['USERNAME'] = 'smtp@mailtrap.io' #
+#app.config['PASSWORD'] = '71251c7ceb8c095c29eb0b2219fb885c' #
+app.config['USERNAME'] = 'kuizpedia@gmail.com' #
+app.config['PASSWORD'] = 'nkpojddmkruelswr' #
 mail = Mail(app)
 
-# SQLAlchemy SETUP
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# DATABASE
-class User(db.Model):     #####################dk why can submit null form###################
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String, unique=True, nullable=False)
-    username = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
-    def create_token(self):
-        seq = Serializer(app.config['SECRET_KEY'])
-        return seq.dumps({'user_id': self.id})
-    
-    @staticmethod
-    def verify_token(token, expiration = 300):
-        seq = Serializer(app.config['SECRET_KEY'])
-        try:
-            user_id = seq.loads(token, max_age = expiration)['user_id']
-        except:
-            return None
-        return User.query.get(user_id)
-
+# SEND EMAIL FUNC
 def sendResetMail(user):
-    token = User.create_token(user)
-    message = Message('Kuizpedia - Password Reset Request', recipients = user, sender = 'noreply@kuizpedia.com', body = '''
-{url_for(reset)}
+    token = User.create_token(user)                                                              ################
+    message = Message('Kuizpedia - Password Reset Request', recipients = [user.email], sender = 'kuizpedia@gmail.com', body = '''
+{url_for('reset', token = token, _external = True)}
 ''')
+    mail.send(message)
+
+# Register the blueprint
+app.register_blueprint(kuiz_bp)
 
 # HOME ROUTE
 @app.route('/')
@@ -86,7 +66,7 @@ def signup1():
 
 @app.route('/signup', methods=["POST"])
 def signup():
-    render_template('signup.html') ###################################################################
+    render_template('signup.html')
     email = request.form['email']
     username = request.form['username']
     password = request.form['password']
@@ -155,8 +135,36 @@ def reset(token):
         return redirect(url_for('login'))
     return render_template('reset.html')
 
+# ROUTES FOR MAIN
+@app.route('/study')
+def study():
+    return render_template('index.html')
+
+@app.route('/create')
+def create():
+    return redirect(url_for('kuiz.show_categories'))
+
+@app.route('/ask')
+def ask():
+    return render_template('ask.html')
+
+@app.route('/study/<username>')
+def study_personal():
+    return
+
+@app.route('/study/public')
+def study_public():
+    return
+
+@app.route('/create/<username>')
+def create_personal():
+    return
+
+@app.route('/create/public')
+def create_public():
+    return
+
 if __name__ in '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-    # page updated automatically without need to restart after code changes
