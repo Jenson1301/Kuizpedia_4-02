@@ -1,28 +1,26 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Question</title>
-</head>
-<body>
-    <h2>Create a New Question</h2>
-    <form method="POST" action="{{ url_for('kuiz.create_question') }}">
-        <label>Question Text:</label><br>
-        <input type="text" name="question_text" required><br><br>
+{% extends 'base.html' %}
 
-        <label>Options (comma-separated):</label><br>
-        <input type="text" name="options" required><br><br>
+{% block title %}Create Question - Kuizpedia{% endblock %}
 
-        <label>Answer:</label><br>
-        <input type="text" name="answer" required><br><br>
+{% block body %}
+<h2>Create a New Question</h2>
+<form method="POST" action="{{ url_for('kuiz.create_question') }}">
+    <label>Question Text:</label><br>
+    <input type="text" name="question_text" required><br><br>
 
-        <label>Category:</label><br>
-        <select name="kuiz_id" required>
-            {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-        </select><br><br>
+    <label>Options (comma-separated):</label><br>
+    <input type="text" name="options" required><br><br>
 
-        <button type="submit">Add Question</button>
-    </form>
-</body>
-</html>
+    <label>Answer:</label><br>
+    <input type="text" name="answer" required><br><br>
+
+    <label>Category:</label><br>
+    <select name="kuiz_id" required>
+        {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Add Question</button>
+</form>
+{% endblock %}

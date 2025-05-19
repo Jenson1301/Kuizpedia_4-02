@@ -1,33 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Question</title>
-</head>
-<body>
-    <h1>Edit Question</h1>
+{% extends 'base.html' %}
 
-    <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="POST">
-        <div>
-            <label for="question_text">Question:</label>
-            <input type="text" id="question_text" name="question_text" value="{{ question.question_text }}" required>
-        </div>
-        
-        <div>
-            <label for="options">Options (comma-separated):</label>
-            <input type="text" id="options" name="options" value="{{ question.options | join(', ') }}" required>
-        </div>
+{% block title %}Edit Question - Kuizpedia{% endblock %}
 
-        <div>
-            <label for="answer">Correct Answer:</label>
-            <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
-        </div>
+{% block body %}
+<h1>Edit Question</h1>
 
-        <button type="submit">Submit Changes</button>
-    </form>
+<form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="POST">
+    <div>
+        <label for="question_text">Question:</label>
+        <input type="text" id="question_text" name="question_text" value="{{ question.question_text }}" required>
+    </div>
+    
+    <div>
+        <label for="options">Options (comma-separated):</label>
+        <input type="text" id="options" name="options" value="{{ question.options | join(', ') }}" required>
+    </div>
 
-    <br>
-    <a href="/">Go Back</a>
-</body>
-</html>
+    <div>
+        <label for="answer">Correct Answer:</label>
+        <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
+    </div>
+
+    <button type="submit">Submit Changes</button>
+</form>
+
+<br>
+<a href="{{ url_for('kuiz.categories') }}">Go Back</a>
+{% endblock %}

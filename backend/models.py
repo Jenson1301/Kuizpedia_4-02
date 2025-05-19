@@ -1,13 +1,7 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+from extensions import db
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import URLSafeTimedSerializer as Serializer
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kuizpedia.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy()
+from sqlalchemy.orm import relationship
 
 class Kuiz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,11 +11,11 @@ class Kuiz(db.Model):
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.String(200), nullable=False)
-    options = db.Column(db.PickleType)  # store as list
+    options = db.Column(db.PickleType)
     answer = db.Column(db.String(100), nullable=False)
     kuiz_id = db.Column(db.Integer, db.ForeignKey('kuiz.id'), nullable=False)
 
-class User(db.Model):     #####################dk why can submit null form###################
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
     username = db.Column(db.String, unique=True, nullable=False)
@@ -32,16 +26,20 @@ class User(db.Model):     #####################dk why can submit null form######
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    def create_token(self):
-        seq = Serializer(app.config['SECRET_KEY'])
-        return seq.dumps({'user_id': self.id})
-    
-    @staticmethod
-    def verify_token(token):
-        seq = Serializer(app.config['SECRET_KEY'])
-        try:
-            url = seq.loads(token, max_age = 60)
-        except:
-            return None
-        return url['user_id']
+
+class QuizAttempt(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    kuiz_id = db.Column(db.Integer, db.ForeignKey('kuiz.id'))
+    score = db.Column(db.Integer)
+    total = db.Column(db.Integer)
+
+    kuiz = db.relationship('Kuiz', backref='attempts')
+
+class QuizAttemptDetail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    attempt_id = db.Column(db.Integer, db.ForeignKey('quiz_attempt.id'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    user_answer = db.Column(db.String(100))
+    correct_answer = db.Column(db.String(100))
+    question = db.relationship('Question')

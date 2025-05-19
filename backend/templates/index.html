@@ -1,44 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kuizpedia</title>
-</head>
-<body>
-    <header>
-        <h1>Welcome to Kuizpedia!</h1>
-        <p>Your fun quiz platform</p>
-    </header>
+{% extends 'base.html' %}
 
-    <div id="timer" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;"></div>
+{% block title %}Quiz - Kuizpedia{% endblock %}
 
-    <h2>Answer the following questions:</h2>
+{% block body %}
+<header>
+    <h1>Welcome to Kuizpedia!</h1>
+    <p>Your fun quiz platform</p>
+</header>
 
-    <form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
-        {% for quiz in quizzes %}
-            <div class="quiz-item">
-                <h3>{{ quiz.question_text }}</h3>
-                <div>
-                    {% for option in quiz.options %}
-                        <input type="radio" 
-                               id="q{{ quiz.id }}_{{ loop.index }}" 
-                               name="question_{{ quiz.id }}" 
-                               value="{{ option }}" required>
-                        <label for="q{{ quiz.id }}_{{ loop.index }}">{{ option }}</label><br>
-                    {% endfor %}
-                </div>
+<div id="timer" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;"></div>
+
+<h2>Answer the following questions:</h2>
+
+<form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
+    {% for quiz in quizzes %}
+        <div class="quiz-item">
+            <h3>{{ quiz.question_text }}</h3>
+            <div>
+                {% for option in quiz.options %}
+                    <input type="radio" 
+                           id="q{{ quiz.id }}_{{ loop.index }}" 
+                           name="question_{{ quiz.id }}" 
+                           value="{{ option }}" required>
+                    <label for="q{{ quiz.id }}_{{ loop.index }}">{{ option }}</label><br>
+                {% endfor %}
             </div>
-            <hr>
-    
-        {% endfor %}
-    
-        <button type="submit">Submit Answers</button>
-    </form>
+        </div>
+        <hr>
+    {% endfor %}
+    <button type="submit">Submit Answers</button>
+</form>
 
-    <br>
-
-    <script>
+<script>
     let timeLeft = Number("{{ timer | default(30) }}");
     const timerDisplay = document.getElementById("timer");
 
@@ -53,6 +46,4 @@
         }
     }, 1000);
 </script>
-
-</body>
-</html>
+{% endblock %}

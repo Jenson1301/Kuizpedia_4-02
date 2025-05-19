@@ -1,34 +1,37 @@
 {% extends 'base.html' %}
 
+{% block title %}Login - Kuizpedia{% endblock %}
+
 {% block body %}
-
-{% for message in get_flashed_messages() %}
-    {{message}}
-{% endfor %}
-
 <div class="container">
+    
     <h1>Login</h1>
-    <form id = 'auth-form' action="{{url_for('login')}}" method = 'post'>
-        <br><input type="text" name="username" placeholder="username" class="input-field" required/>
-        <br><input type="password" name="password" placeholder="password" class="input-field" required/>
-        <br><input type="submit" value="Login" class="btn-login" onclick="setActionForm('login')"/>
-        <br><label>Forgot your password? Reset here.<input type="button" value="Forgot Password" class="btn-forgotpassword" onclick="window.location.href=`{{url_for('forgot1')}}`"/></label>
-        <br><label>New user? Register here.<input type="button" value="Signup" class="btn-signup" onclick="window.location.href=`{{url_for('signup1')}}`"/></label>
+    <form id="auth-form" action="{{ url_for('auth.login_post') }}" method="post">
+        <input type="text" name="username" placeholder="Username" class="input-field" required/>
+        <input type="password" name="password" placeholder="Password" class="input-field" required/>
+        <input type="submit" value="Login" class="btn-login"/>
     </form>
+
+    <br>
+    <div>
+        Forgot your password? 
+        <button type="button" class="btn-forgotpassword" id="btn-forgot">Reset Here</button>
+    </div>
+    <br>
+    <div>
+        New user? 
+        <button type="button" class="btn-signup" id="btn-signup">Signup</button>
+    </div>
+
 </div>
 
 <script>
-    function setActionForm(action){
-        let form = document.getElementById('auth-form')
-        if (action === 'login'){
-            form.action = "{{url_for('login')}}";
-            form.method = "post";
-            form.submit();
-        }
-    }
+    document.getElementById('btn-forgot').addEventListener('click', function() {
+        window.location.href = "{{ url_for('auth.forgot_password_get') }}";
+    });
 
-
+    document.getElementById('btn-signup').addEventListener('click', function() {
+        window.location.href = "{{ url_for('auth.signup_get') }}";
+    });
 </script>
-</div>
-
 {% endblock %}

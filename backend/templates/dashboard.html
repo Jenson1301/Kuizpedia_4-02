@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 
-{% block body%}
-<div class="container">
-    <h1>Welcome, {{username}}</h1>
-    <p>Welcome to your dashboard!</p>
-    <p>What would you like to do today?</p>
-<!-- menu popup? -->
-    <br><input type="button" value="Study" class="btn-study" onclick="window.location.href=`{{url_for('study')}}`"/>
-    <input type="button" value="Create" class="btn-create" onclick="window.location.href=`{{url_for('create')}}`"/>
-    <input type="button" value="Ask" class="btn-ask" onclick="window.location.href=`{{url_for('ask')}}`"/>
-    <br><br><input type="button" value="Logout" class="btn-logout" onclick="window.location.href=`{{url_for('logout')}}`"/>
+{% block title %}Dashboard - Kuizpedia{% endblock %}
+
+{% block body %}
+<h1>Welcome back, {{ session['username'] }} !</h1>
+<p>What would you like to do today?</p>
+
+<div style="margin-top: 30px;">
+    <a href="{{ url_for('kuiz.past_attempts') }}" class="btn btn-primary">📜 View Past Attempts</a>
+</div>
+
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('kuiz.show_categories') }}" class="btn btn-success">🧠 Start a New Quiz</a>
 </div>
 {% endblock %}

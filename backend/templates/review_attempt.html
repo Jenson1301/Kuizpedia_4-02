@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Attempt{% endblock %}
+
+{% block body %}
+<h1>Review: {{ attempt.kuiz.name }}</h1>
+<p>Score: {{ attempt.score }}/{{ attempt.total }}</p>
+
+{% for detail in details %}
+  <div>
+    <h3>{{ detail.question.question_text }}</h3>
+    <p>Your answer: <strong>{{ detail.user_answer }}</strong></p>
+    {% if detail.user_answer != detail.correct_answer %}
+      <p style="color:red;">Correct answer: {{ detail.correct_answer }}</p>
+    {% else %}
+      <p style="color:green;">Correct!</p>
+    {% endif %}
+  </div>
+  <hr>
+{% endfor %}
+{% endblock %}

@@ -1,25 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Select Category</title>
-</head>
-<body>
-    <h1>Select a Quiz Category</h1>
-    <a href="{{ url_for('kuiz.add_category_form') }}">
-        <button>Add New Category</button>
-    </a>
-    <ul>
-        {% for category in categories %}
-            <li>
-                <strong>{{ category.name }}</strong>
-                <!-- Updated link to go to the choose-timer route instead of the direct quiz -->
-                - <a href="{{ url_for('kuiz.choose_timer') }}?category_id={{ category.id }}" 
-                    onclick="return confirm('Are you ready to answer the questions in this category?')">Answer Questions</a>
-                - <a href="{{ url_for('kuiz.edit_category_form', category_id=category.id) }}">Edit Category</a>
-                - <a href="{{ url_for('kuiz.delete_category', category_id=category.id) }}" 
-                      onclick="return confirm('Are you sure you want to delete this category?');">Delete Category</a>
-            </li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Select Category - Kuizpedia{% endblock %}
+
+
+{% block body %}
+<h1>Select a Quiz Category</h1>
+<a href="{{ url_for('kuiz.add_category_form') }}">
+    <button>Add New Category</button>
+</a>
+
+<div style="margin-top: 20px;">
+    <a href="{{ url_for('kuiz.dashboard') }}" class="btn btn-secondary">🏠 Back to Dashboard</a>
+</div>
+
+<ul>
+    {% for category in categories %}
+        <li>
+            <strong>{{ category.name }}</strong>
+            - <a href="{{ url_for('kuiz.choose_timer') }}?category_id={{ category.id }}" 
+                 onclick="return confirm('Are you ready to answer the questions in this category?')">Answer Questions</a>
+            - <a href="{{ url_for('kuiz.edit_category_form', category_id=category.id) }}">Edit Category</a>
+            - <a href="{{ url_for('kuiz.delete_category', category_id=category.id) }}" 
+                 onclick="return confirm('Are you sure you want to delete this category?');">Delete Category</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
