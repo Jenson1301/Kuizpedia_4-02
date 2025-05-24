@@ -1,5 +1,5 @@
 from flask import Flask
-from models import Kuiz, Question, User
+from models import Kuiz, Question
 from quiz_routes import kuiz_bp
 from auth_routes import auth_bp
 from extensions import db, mail
@@ -7,15 +7,14 @@ from extensions import db, mail
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kuizpedia.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'satgi buat balik'
+app.config['SECRET_KEY'] = 'CSP1123#trim*2510!group@4-02'
 
-# Configure mail
 app.config.update(
-    MAIL_SERVER='smtp.example.com',
+    MAIL_SERVER='smtp.gmail.com',
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='your_email@example.com',
-    MAIL_PASSWORD='your_password'
+    MAIL_USERNAME='kuizpedia@gmail.com',
+    MAIL_PASSWORD='nkpojddmkruelswr'
 )
 
 db.init_app(app)
