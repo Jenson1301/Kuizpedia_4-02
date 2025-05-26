@@ -25,6 +25,8 @@ class Question(db.Model):
     question_text = db.Column(db.String(200), nullable=False)
     options = db.Column(db.PickleType)
     answer = db.Column(db.String(100), nullable=False)
+    visibility = db.Column(db.String, nullable=False)
+    
     kuiz_id = db.Column(
         db.Integer,
         db.ForeignKey('kuiz.id', name='fk_question_kuiz_id'),
@@ -37,7 +39,6 @@ class Question(db.Model):
     )
 
     user = db.relationship('User', backref='questions')
-
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'

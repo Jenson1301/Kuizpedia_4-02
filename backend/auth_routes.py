@@ -16,11 +16,15 @@ def login_post():
     username = request.form['username']
     password = request.form['password']
     user = User.query.filter_by(username=username).first()
-    if user and user.check_password(password):
-        session['username'] = username
-        return redirect(url_for('kuiz.dashboard'))
+    if user:
+        if user and user.check_password(password):
+            session['username'] = username
+            return redirect(url_for('kuiz.dashboard'))
+        else:
+            flash('Invalid username or password.')
+            return render_template('login.html')
     else:
-        flash('Invalid username or password.')
+        flash('User not registered.')
         return render_template('login.html')
 
 @auth_bp.route('/signup', methods=['GET'])
