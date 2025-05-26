@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from models import db, User
-from flask_mail import Mail, Message
+from flask_mail import Message
 from itsdangerous import URLSafeTimedSerializer as Serializer
-import re
 from extensions import mail
+import re
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -84,12 +84,16 @@ def reset_password(token):
 
     if request.method == 'POST':
         password = request.form['password']
-        user.set_password(password)
-        db.session.commit()
-        flash('Password reset successful. Please login.')
-        return redirect(url_for('auth.login_get'))
+        confirmpassword = request.form['confirmpassword']
+        if password != confirmpassword:
+            flash('Passwords do not match.')
+        else:
+            user.set_password(password)
+            db.session.commit()
+            flash('Password reset successful. Please login.')
+            return redirect(url_for('auth.login_get'))
 
-    return render_template('reset.html')
+    return render_template('reset.html', token=token)
 
 def send_reset_mail(user):
     seq = Serializer(current_app.config['SECRET_KEY'])
@@ -100,4 +104,3 @@ def send_reset_mail(user):
                   recipients=[user.email])
     msg.body = f"Click the link to reset your password: {reset_url}"
     mail.send(msg)
-

@@ -1,6 +1,8 @@
+from flask import current_app
 from extensions import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import URLSafeTimedSerializer as Serializer
 
 class Kuiz(db.Model):
     __tablename__ = 'kuiz'
@@ -52,6 +54,11 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def verify_token(token):
+        seq = Serializer(current_app.config['SECRET_KEY'])
+        url = seq.loads(token, max_age = 300)
+        return url['user_id']
 
 
 class QuizAttempt(db.Model):
