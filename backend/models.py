@@ -16,6 +16,9 @@ class Question(db.Model):
     options = db.Column(db.PickleType)
     answer = db.Column(db.String(100), nullable=False)
     kuiz_id = db.Column(db.Integer, db.ForeignKey('kuiz.id'), nullable=False)
+    visibility = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='submissions')
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

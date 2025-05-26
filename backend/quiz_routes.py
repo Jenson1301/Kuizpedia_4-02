@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
 from extensions import db
 from models import Question, Kuiz, User, QuizAttempt, QuizAttemptDetail
+from sqlalchemy import or_, and_
 
 # Create a Blueprint for the quiz-related routes
 kuiz_bp = Blueprint('kuiz', __name__)  
@@ -8,7 +9,16 @@ kuiz_bp = Blueprint('kuiz', __name__)
 # Route to fetch all quiz questions from the database
 @kuiz_bp.route('/quizzes', methods=['GET'])
 def get_quizzes():
-    all_questions = Question.query.all()  # fetches all questions from the database
+    user_id = session.get('username')
+    all_questions = Question.query.filter(
+        or_(
+            Question.visibility == 'public',
+            and_(
+                Question.visibility == 'personal',
+                Question.user_id == user_id
+            )
+        )
+    ).all()  # fetches all questions from the database
     
     quizzes = [
         {"id": q.id, 
@@ -88,13 +98,17 @@ def create_question():
     question_text = request.form['question_text']
     options = request.form['options'].split(',')
     answer = request.form['answer']
-    category_id = int(request.form['kuiz_id'])  
+    category_id = int(request.form['kuiz_id'])
+    visibility = request.form.get('visibility')
+    user_id = session.get('username')
 
     new_question = Question(
         question_text=question_text,
         options=options,
         answer=answer,
-        kuiz_id=category_id
+        kuiz_id=category_id,
+        visibility = visibility,
+        user_id = user_id
     )
 
     db.session.add(new_question)
@@ -106,12 +120,17 @@ def create_question():
 def edit_question(question_id):
     question = Question.query.get_or_404(question_id)
 
-    if request.method == 'POST':
-        question.question_text = request.form['question_text']
-        question.options = request.form['options'].split(',')
-        question.answer = request.form['answer']
-        db.session.commit()
-        return redirect(url_for('kuiz.edit_category_form', category_id=question.kuiz_id))
+    user_id = session.get('username')
+    if question.user_id == user_id:
+
+        if request.method == 'POST':
+            question.question_text = request.form['question_text']
+            question.options = request.form['options'].split(',')
+            question.answer = request.form['answer']
+            new_visibility = request.form.get('visibility')
+            question.visibility = new_visibility
+            db.session.commit()
+            return redirect(url_for('kuiz.edit_category_form', category_id=question.kuiz_id))
 
     return render_template('edit_question.html', question=question)
 
@@ -152,8 +171,18 @@ def add_category():
 
 @kuiz_bp.route('/edit-category/<int:category_id>', methods=['GET'])
 def edit_category_form(category_id):
+    user_id = session.get('username')
     category = Kuiz.query.get_or_404(category_id)
-    questions = Question.query.filter_by(kuiz_id=category_id).all()
+    questions = Question.query.filter(
+        or_(
+            Question.visibility == 'public',
+            and_(
+                Question.visibility == 'personal',
+                Question.user_id == user_id
+            )
+        )
+    ).filter_by(kuiz_id=category_id).all()
+
     return render_template('edit_category.html', category=category, questions=questions)
 
 @kuiz_bp.route('/edit-category/<int:category_id>', methods=['POST'])
