@@ -5,8 +5,13 @@
 {% block body %}
 <h1>Your Score</h1>
 <p>You got {{ score }} out of {{ total }} correct!</p>
-<a href="{{ url_for('kuiz.home') }}">Back to Home</a>
-<div style="margin-top: 20px;">
-    <a href="{{ url_for('kuiz.dashboard') }}" class="btn btn-secondary">🏠 Back to Dashboard</a>
+<form action="{{ url_for('kuiz.home') }}" method="GET" style="display:inline;">
+  <button type="submit">Back to Home</button>
+</form>
+
+<div>
+  <form action="{{ url_for('kuiz.dashboard') }}" method="GET" style="display:inline; margin-top: 20px;">
+    <button type="submit">🏠 Back to Dashboard</button>
+  </form>
 </div>
 {% endblock %}

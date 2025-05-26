@@ -20,7 +20,6 @@
 
         <br><br>
 
-        <!-- Add the number of questions selector here -->
         <label for="num_questions">Number of questions:</label>
         <input type="number" id="num_questions" name="num_questions" min="1" max="{{ category.questions|length }}" required>
 
@@ -28,5 +27,12 @@
 
         <button type="submit">Start Quiz</button>
     </form>
+
+    <br>
+
+    <form action="{{ url_for('kuiz.show_categories') }}" method="GET">
+        <button type="submit">Back to Categories</button>
+    </form>
+
 </body>
 </html>

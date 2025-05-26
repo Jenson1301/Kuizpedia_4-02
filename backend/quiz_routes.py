@@ -2,20 +2,30 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from extensions import db
 from models import Question, Kuiz, User, QuizAttempt, QuizAttemptDetail
 from sqlalchemy import or_, and_
+import random  # moved import here
 
 # Create a Blueprint for the quiz-related routes
-kuiz_bp = Blueprint('kuiz', __name__)  
+kuiz_bp = Blueprint('kuiz', __name__)
+
+def get_logged_in_user():
+    if 'username' not in session:
+        return None
+    user = User.query.filter_by(username=session['username']).first()
+    if not user:
+        session.pop('username', None)
+        return None
+    return user
 
 # Route to fetch all quiz questions from the database
 @kuiz_bp.route('/quizzes', methods=['GET'])
 def get_quizzes():
-    user_id = session.get('username')
+    user = get_logged_in_user()
     all_questions = Question.query.filter(
         or_(
             Question.visibility == 'public',
             and_(
                 Question.visibility == 'personal',
-                Question.user_id == user_id
+                Question.user_id == user.id
             )
         )
     ).all()  # fetches all questions from the database
@@ -32,12 +42,8 @@ def get_quizzes():
 
 @kuiz_bp.route('/submit-quiz', methods=['POST'])
 def submit_quiz():
-    if 'username' not in session:
-        return redirect(url_for('auth.login_get'))
-
-    user = User.query.filter_by(username=session['username']).first()
+    user = get_logged_in_user()
     if not user:
-        session.pop('username', None)
         return redirect(url_for('auth.login_get'))
 
     question_ids = []
@@ -57,7 +63,7 @@ def submit_quiz():
         user_answer = request.form.get(f"question_{qid}")
         correct_answer = question.answer
         
-        if user_answer and user_answer.strip() == correct_answer.strip():
+        if user_answer and user_answer.strip().lower() == correct_answer.strip().lower():
             score += 1
 
         details.append(QuizAttemptDetail(
@@ -91,16 +97,20 @@ def submit_quiz():
 @kuiz_bp.route('/create-question', methods=['GET'])
 def create_question_form():
     categories = Kuiz.query.all()
-    return render_template('create_question.html', categories=categories)
+    category_id = request.args.get('category_id')  
+    return render_template('create_question.html', categories=categories, category_id=category_id)
 
 @kuiz_bp.route('/create-question', methods=['POST'])
 def create_question():
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     question_text = request.form['question_text']
-    options = request.form['options'].split(',')
+    options = [opt.strip() for opt in request.form['options'].split(',')]
     answer = request.form['answer']
     category_id = int(request.form['kuiz_id'])
     visibility = request.form.get('visibility')
-    user_id = session.get('username')
 
     new_question = Question(
         question_text=question_text,
@@ -108,7 +118,7 @@ def create_question():
         answer=answer,
         kuiz_id=category_id,
         visibility = visibility,
-        user_id = user_id
+        user_id=user.id  # Track the creator
     )
 
     db.session.add(new_question)
@@ -119,13 +129,22 @@ def create_question():
 @kuiz_bp.route('/edit-question/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
     question = Question.query.get_or_404(question_id)
+    
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
 
-    user_id = session.get('username')
-    if question.user_id == user_id:
-
+    # Check permission
+    if question.user_id != user.id:
+        return render_template(
+            'no_permission.html',
+            message="You do not have permission to edit or delete this question.",
+            back_url=url_for('kuiz.edit_category_form', category_id=question.kuiz_id)
+        ), 403
+    else:
         if request.method == 'POST':
             question.question_text = request.form['question_text']
-            question.options = request.form['options'].split(',')
+            question.options = [opt.strip() for opt in request.form['options'].split(',')]
             question.answer = request.form['answer']
             new_visibility = request.form.get('visibility')
             question.visibility = new_visibility
@@ -134,10 +153,21 @@ def edit_question(question_id):
 
     return render_template('edit_question.html', question=question)
 
-
-@kuiz_bp.route('/delete-question/<int:question_id>', methods=['GET'])
+@kuiz_bp.route('/delete-question/<int:question_id>', methods=['POST', 'GET'])
 def delete_question(question_id):
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     question = Question.query.get_or_404(question_id)
+
+    if question.user_id != user.id:
+        return render_template(
+            'no_permission.html',
+            message="You do not have permission to delete this question.",
+            back_url=url_for('kuiz.edit_category_form', category_id=question.kuiz_id)
+        ), 403
+
     category_id = question.kuiz_id  
     db.session.delete(question)
     db.session.commit()
@@ -151,9 +181,10 @@ def get_quiz_by_category(category_id):
 
 @kuiz_bp.route('/categories')
 def show_categories():
-    if 'username' not in session:
+    user = get_logged_in_user()
+    if not user:
         return redirect(url_for('auth.login_get'))
-    username = session['username']
+    username = user.username
     categories = Kuiz.query.all()
     return render_template('categories.html', categories=categories, username=username)
     
@@ -163,22 +194,30 @@ def add_category_form():
 
 @kuiz_bp.route('/add-category', methods=['POST'])
 def add_category():
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     category_name = request.form['category_name']
-    new_category = Kuiz(name=category_name)
+    new_category = Kuiz(name=category_name, user_id=user.id)
     db.session.add(new_category)
     db.session.commit()
     return redirect(url_for('kuiz.show_categories'))
 
 @kuiz_bp.route('/edit-category/<int:category_id>', methods=['GET'])
 def edit_category_form(category_id):
-    user_id = session.get('username')
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     category = Kuiz.query.get_or_404(category_id)
+
     questions = Question.query.filter(
         or_(
             Question.visibility == 'public',
             and_(
                 Question.visibility == 'personal',
-                Question.user_id == user_id
+                Question.user_id == user.id
             )
         )
     ).filter_by(kuiz_id=category_id).all()
@@ -187,15 +226,35 @@ def edit_category_form(category_id):
 
 @kuiz_bp.route('/edit-category/<int:category_id>', methods=['POST'])
 def edit_category(category_id):
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     category = Kuiz.query.get_or_404(category_id)
+
+    # Update category name and commit
     category.name = request.form['category_name']
     db.session.commit()
     return redirect(url_for('kuiz.show_categories'))
 
-@kuiz_bp.route('/delete-category/<int:category_id>', methods=['GET'])
+@kuiz_bp.route('/delete-category/<int:category_id>', methods=['POST'])
 def delete_category(category_id):
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+
     category = Kuiz.query.get_or_404(category_id)
-    Question.query.filter_by(kuiz_id=category.id).delete()
+
+    if category.user_id != user.id:
+        return render_template(
+            'no_permission.html',
+            message="You do not have permission to delete this category.",
+            back_url=url_for('kuiz.show_categories')
+        ), 403
+
+    for question in category.questions:
+        db.session.delete(question)
+
     db.session.delete(category)
     db.session.commit()
     return redirect(url_for('kuiz.show_categories'))
@@ -209,7 +268,6 @@ def start_quiz():
     category = Kuiz.query.get_or_404(category_id)
     questions = Question.query.filter_by(kuiz_id=category_id).all()
 
-    import random
     random.shuffle(questions)
 
     if not num_questions or num_questions < 1 or num_questions > len(questions):
@@ -228,13 +286,19 @@ def choose_timer():
     category = Kuiz.query.get_or_404(category_id)  
     return render_template('choose_timer.html', category=category)
 
+@kuiz_bp.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('kuiz.home'))
+
 @kuiz_bp.route('/')
 def home():
-    return redirect(url_for('kuiz.show_categories'))
+    return redirect(url_for('kuiz.dashboard'))
 
 @kuiz_bp.route('/review-attempts/<int:attempt_id>')
 def review_attempt(attempt_id):
-    if 'username' not in session:
+    user = get_logged_in_user()
+    if not user:
         return redirect(url_for('auth.login_get'))
 
     attempt = QuizAttempt.query.get_or_404(attempt_id)
@@ -244,12 +308,8 @@ def review_attempt(attempt_id):
 
 @kuiz_bp.route('/past-attempts')
 def past_attempts():
-    if 'username' not in session:
-        return redirect(url_for('auth.login_get'))
-
-    user = User.query.filter_by(username=session['username']).first()
+    user = get_logged_in_user()
     if not user:
-        session.pop('username', None)
         return redirect(url_for('auth.login_get'))
 
     attempts = QuizAttempt.query.filter_by(user_id=user.id).order_by(QuizAttempt.id.desc()).all()
@@ -258,14 +318,11 @@ def past_attempts():
 
 @kuiz_bp.route('/dashboard')
 def dashboard():
-    if 'username' not in session:
-        return redirect(url_for('auth.login_get'))
-
-    user = User.query.filter_by(username=session['username']).first()
+    user = get_logged_in_user()
     if not user:
-        session.pop('username', None)
         return redirect(url_for('auth.login_get'))
 
     attempts = QuizAttempt.query.filter_by(user_id=user.id).order_by(QuizAttempt.id.desc()).all()
     
     return render_template('dashboard.html', username=user.username, attempts=attempts)
+
