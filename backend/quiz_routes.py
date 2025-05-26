@@ -219,7 +219,7 @@ def delete_category(category_id):
     user = get_logged_in_user()
     if not user:
         return redirect(url_for('auth.login_get'))
-    
+
     category = Kuiz.query.get_or_404(category_id)
 
     if category.user_id != user.id:
@@ -228,6 +228,9 @@ def delete_category(category_id):
             message="You do not have permission to delete this category.",
             back_url=url_for('kuiz.show_categories')
         ), 403
+
+    for question in category.questions:
+        db.session.delete(question)
 
     db.session.delete(category)
     db.session.commit()
