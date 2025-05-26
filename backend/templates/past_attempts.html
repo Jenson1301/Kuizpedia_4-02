@@ -9,15 +9,17 @@
   {% for attempt in attempts %}
     <li>
       Quiz: {{ attempt.kuiz.name }} - Score: {{ attempt.score }}/{{ attempt.total }} 
-        <a href="{{ url_for('kuiz.review_attempt', attempt_id=attempt.id) }}">Review</a>
+      <form action="{{ url_for('kuiz.review_attempt', attempt_id=attempt.id) }}" method="GET" style="display:inline;">
+        <button type="submit">Review</button>
+      </form>
     </li>
   {% else %}
     <li>You have no past attempts.</li>
   {% endfor %}
 </ul>
 
-<div style="margin-top: 20px;">
-    <a href="{{ url_for('kuiz.dashboard') }}" class="btn btn-secondary">🏠 Back to Dashboard</a>
-</div>
+<form action="{{ url_for('kuiz.dashboard') }}" method="GET">
+  <button type="submit">🏠 Back to Dashboard</button>
+</form>
 
 {% endblock %}

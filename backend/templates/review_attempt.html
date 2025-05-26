@@ -10,7 +10,7 @@
   <div>
     <h3>{{ detail.question.question_text }}</h3>
     <p>Your answer: <strong>{{ detail.user_answer }}</strong></p>
-    {% if detail.user_answer != detail.correct_answer %}
+    {% if detail.user_answer.strip()|lower != detail.correct_answer.strip()|lower %}
       <p style="color:red;">Correct answer: {{ detail.correct_answer }}</p>
     {% else %}
       <p style="color:green;">Correct!</p>
@@ -18,4 +18,17 @@
   </div>
   <hr>
 {% endfor %}
+
+<div>
+  <form action="{{ url_for('kuiz.dashboard') }}" method="GET" style="display:inline;">
+    <button type="submit">🏠 Back to Dashboard</button>
+  </form>
+</div>
+
+<div>
+  <form action="{{ url_for('kuiz.past_attempts') }}" method="GET" style="display:inline;">
+    <button type="submit">⬅️ Back to Past Attempts</button>
+  </form>
+</div>
+
 {% endblock %}

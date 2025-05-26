@@ -12,6 +12,9 @@
         <button type="submit">Add Category</button>
     </form>
 
-    <a href="{{ url_for('kuiz.show_categories') }}">Back to Categories</a>
+    
+    <form action="{{ url_for('kuiz.show_categories') }}" method="GET" style="margin-top: 10px;">
+        <button type="submit">Back to Categories</button>
+    </form>
 </body>
 </html>

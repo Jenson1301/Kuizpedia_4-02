@@ -23,4 +23,11 @@
 
     <button type="submit">Add Question</button>
 </form>
+
+{% if category_id %}
+  <form action="{{ url_for('kuiz.edit_category_form', category_id=category_id) }}">
+    <button type="submit">Go Back to Edit Category</button>
+  </form>
+{% endif %}
+
 {% endblock %}

@@ -7,10 +7,14 @@
 <p>What would you like to do today?</p>
 
 <div style="margin-top: 30px;">
-    <a href="{{ url_for('kuiz.past_attempts') }}" class="btn btn-primary">📜 View Past Attempts</a>
+    <form action="{{ url_for('kuiz.past_attempts') }}" method="GET" style="display:inline;">
+        <button type="submit">📜 View Past Attempts</button>
+    </form>
 </div>
 
 <div style="margin-top: 20px;">
-    <a href="{{ url_for('kuiz.show_categories') }}" class="btn btn-success">🧠 Start a New Quiz</a>
+    <form action="{{ url_for('kuiz.show_categories') }}" method="GET" style="display:inline;">
+        <button type="submit">🧠 Start a New Quiz</button>
+    </form>
 </div>
 {% endblock %}
