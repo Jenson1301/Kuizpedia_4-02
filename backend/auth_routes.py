@@ -9,7 +9,7 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET'])
 def login_get():
-    if 'username' in session:
+    if 'user_id' in session:
         redirect(url_for('kuiz.dashboard'))
     return render_template('login.html')
 
@@ -20,7 +20,7 @@ def login_post():
     user = User.query.filter_by(username=username).first()
     if user:
         if user and user.check_password(password):
-            session['username'] = username
+            session['user_id'] = user.id
             return redirect(url_for('kuiz.dashboard'))
         else:
             flash('Invalid username or password.')
@@ -60,7 +60,7 @@ def signup_post():
 
 @auth_bp.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('user_id', None)
     return redirect(url_for('auth.login_get'))
 
 @auth_bp.route('/forgot_password', methods=['GET'])

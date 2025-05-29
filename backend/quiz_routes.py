@@ -8,13 +8,10 @@ import random  # moved import here
 kuiz_bp = Blueprint('kuiz', __name__)
 
 def get_logged_in_user():
-    if 'username' not in session:
+    user_id = session.get('user_id')
+    if not user_id:
         return None
-    user = User.query.filter_by(username=session['username']).first()
-    if not user:
-        session.pop('username', None)
-        return None
-    return user
+    return User.query.get(user_id)
 
 # Route to fetch all quiz questions from the database
 @kuiz_bp.route('/quizzes', methods=['GET'])
@@ -107,7 +104,7 @@ def create_question():
         return redirect(url_for('auth.login_get'))
 
     question_text = request.form['question_text']
-    options = [opt.strip() for opt in request.form['options'].split(',')]
+    options = request.form.getlist('options')
     answer = request.form['answer']
     category_id = int(request.form['kuiz_id'])
     visibility = request.form.get('visibility')
@@ -144,7 +141,7 @@ def edit_question(question_id):
     else:
         if request.method == 'POST':
             question.question_text = request.form['question_text']
-            question.options = [opt.strip() for opt in request.form['options'].split(',')]
+            question.options = request.form.getlist('options')
             question.answer = request.form['answer']
             question.visibility = request.form.get('visibility')
             db.session.commit()

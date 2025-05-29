@@ -10,6 +10,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kuizpedia.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'CSP1123#trim*2510!group@4-02'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # or 'None' (if using HTTPS and cross-site)
+app.config['SESSION_COOKIE_SECURE'] = False     # True if using HTTPS
 
 app.config.update(
     MAIL_SERVER='smtp.gmail.com',
