@@ -5,6 +5,7 @@
             <strong>{{ question.question_text }}</strong>
             <br>Options: {{ question.options | join(', ') }}
             <br>Answer: {{ question.answer }}
+            <br>Visibility: {{ question.visibility }}
             <br>
             <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="GET" style="display:inline;">
                 <button type="submit">Edit Question</button>

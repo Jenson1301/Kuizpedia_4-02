@@ -5,8 +5,8 @@
 {% block body %}
 <h1>Your Score</h1>
 <p>You got {{ score }} out of {{ total }} correct!</p>
-<form action="{{ url_for('kuiz.home') }}" method="GET" style="display:inline;">
-  <button type="submit">Back to Home</button>
+<form action="{{ url_for('kuiz.answer') }}" method="GET" style="display:inline;">
+  <button type="submit">Back to Categories</button>
 </form>
 
 <div>

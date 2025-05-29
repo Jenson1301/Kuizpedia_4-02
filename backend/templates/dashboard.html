@@ -7,6 +7,12 @@
 <p>What would you like to do today?</p>
 
 <div style="margin-top: 30px;">
+    <form action="{{ url_for('kuiz.answer') }}" method="GET" style="display:inline;">
+        <button type="submit">🧠 Attempt Quiz</button>
+    </form>
+</div>
+
+<div style="margin-top: 20px;">
     <form action="{{ url_for('kuiz.past_attempts') }}" method="GET" style="display:inline;">
         <button type="submit">📜 View Past Attempts</button>
     </form>
@@ -14,7 +20,8 @@
 
 <div style="margin-top: 20px;">
     <form action="{{ url_for('kuiz.show_categories') }}" method="GET" style="display:inline;">
-        <button type="submit">🧠 Start a New Quiz</button>
+        <button type="submit">✍🏼 Create a New Quiz</button>
     </form>
 </div>
+
 {% endblock %}

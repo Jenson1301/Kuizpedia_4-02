@@ -21,11 +21,16 @@
         <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
     </div>
 
+    <label for="visibility">Visibility:</label>
+    <select name="visibility" id="visibility" required>
+        <option value="personal">Personal Deck</option>
+        <option value="public">Public Deck</option>
+    </select>
+
     <button type="submit">Submit Changes</button>
 </form>
 
 <br>
-<form action="{{ url_for('kuiz.show_categories') }}" method="GET">
-    <button type="submit">Go Back</button>
-</form>
+<button type="button" onclick="window.history.back();">Go Back</button>
+
 {% endblock %}
