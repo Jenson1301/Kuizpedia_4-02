@@ -8,13 +8,10 @@ import random  # moved import here
 kuiz_bp = Blueprint('kuiz', __name__)
 
 def get_logged_in_user():
-    if 'username' not in session:
+    user_id = session.get('user_id')
+    if not user_id:
         return None
-    user = User.query.filter_by(username=session['username']).first()
-    if not user:
-        session.pop('username', None)
-        return None
-    return user
+    return User.query.get(user_id)
 
 # Route to fetch all quiz questions from the database
 @kuiz_bp.route('/quizzes', methods=['GET'])
