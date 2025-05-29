@@ -124,7 +124,7 @@ def create_question():
     db.session.add(new_question)
     db.session.commit()
 
-    return redirect(url_for('kuiz.home'))
+    return redirect(url_for('kuiz.edit_category_form', category_id=category_id))
 
 @kuiz_bp.route('/edit-question/<int:question_id>', methods=['GET', 'POST'])
 def edit_question(question_id):
@@ -146,8 +146,7 @@ def edit_question(question_id):
             question.question_text = request.form['question_text']
             question.options = [opt.strip() for opt in request.form['options'].split(',')]
             question.answer = request.form['answer']
-            new_visibility = request.form.get('visibility')
-            question.visibility = new_visibility
+            question.visibility = request.form.get('visibility')
             db.session.commit()
             return redirect(url_for('kuiz.edit_category_form', category_id=question.kuiz_id))
 
@@ -172,6 +171,15 @@ def delete_question(question_id):
     db.session.delete(question)
     db.session.commit()
     return redirect(url_for('kuiz.edit_category_form', category_id=category_id))
+
+@kuiz_bp.route('/answer')
+def answer():
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+    username = user.username
+    categories = Kuiz.query.all()
+    return render_template('answer.html', categories=categories, username=username)
 
 @kuiz_bp.route('/quiz/<int:category_id>')
 def get_quiz_by_category(category_id):
@@ -261,12 +269,21 @@ def delete_category(category_id):
 
 @kuiz_bp.route('/start-quiz')
 def start_quiz():
+    user = get_logged_in_user()
     category_id = request.args.get('category_id', type=int)
     num_questions = request.args.get('num_questions', type=int)
     timer = request.args.get('timer', type=int)
 
     category = Kuiz.query.get_or_404(category_id)
-    questions = Question.query.filter_by(kuiz_id=category_id).all()
+    questions = Question.query.filter(
+        or_(
+            Question.visibility == 'public',
+            and_(
+                Question.visibility == 'personal',
+                Question.user_id == user.id
+            )
+        )
+    ).filter_by(kuiz_id=category_id).all()
 
     random.shuffle(questions)
 
@@ -283,8 +300,21 @@ def start_quiz():
 @kuiz_bp.route('/choose-timer')
 def choose_timer():
     category_id = request.args.get('category_id', type=int)
-    category = Kuiz.query.get_or_404(category_id)  
-    return render_template('choose_timer.html', category=category)
+    category = Kuiz.query.get_or_404(category_id)
+
+    user = get_logged_in_user()
+    visible_questions = Question.query.filter(
+        Question.kuiz_id == category.id,
+        or_(
+            Question.visibility == 'public',
+            and_(
+                Question.visibility == 'personal',
+                Question.user_id == user.id
+            )
+        )
+    ).all()
+
+    return render_template('choose_timer.html', category=category, visible_questions=visible_questions)
 
 @kuiz_bp.route('/logout', methods=['POST'])
 def logout():

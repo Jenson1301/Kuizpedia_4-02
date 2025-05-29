@@ -9,6 +9,8 @@ auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/login', methods=['GET'])
 def login_get():
+    if 'username' in session:
+        redirect(url_for('kuiz.dashboard'))
     return render_template('login.html')
 
 @auth_bp.route('/login', methods=['POST'])

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+<h1>Select a Quiz Category</h1>
+
+<div style="margin-top: 20px;">
+  <form action="{{ url_for('kuiz.dashboard') }}" method="get" style="display:inline;">
+    <button type="submit">🏠 Back to Dashboard</button>
+  </form>
+</div>
+
+<ul>
+    {% for category in categories %}
+<li>
+    <strong>{{ category.name }}</strong>
+
+    <form action="{{ url_for('kuiz.choose_timer') }}" method="GET" style="display: inline;">
+        <input type="hidden" name="category_id" value="{{ category.id }}">
+        <button type="submit" class="btn btn-primary">Answer Questions</button>
+    </form>
+
+</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
