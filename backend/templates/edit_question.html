@@ -12,8 +12,16 @@
     </div>
     
     <div>
-        <label for="options">Options (comma-separated):</label>
-        <input type="text" id="options" name="options" value="{{ question.options | join(', ') }}" required>
+        <label>Options:</label>
+        <div id="options">
+            {% for option in question.options %}
+            <div class="option-group">
+                <input type="text" name="options" value="{{ option }}" required>
+                <button type="button" class="btn-delete-option">Delete Option</button>
+            </div>
+            {% endfor %}
+        </div>
+        <br><button type="button" class="btn-add_option" id="btn-add_option">Add option</button><br><br>
     </div>
 
     <div>
@@ -32,5 +40,43 @@
 
 <br>
 <button type="button" onclick="window.history.back();">Go Back</button>
+
+<script>
+    document.querySelectorAll('.btn-delete-option').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (document.getElementById('options').querySelectorAll('.option-group').length > 1) {
+                this.parentElement.remove();
+            } else {
+                alert("At least one option is required.");
+            }
+        });
+    });
+
+    document.getElementById('btn-add_option').addEventListener('click', function() {
+      const group = document.createElement('div');
+      group.style.marginTop = '5px';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.name = 'options';
+      input.placeholder = 'Add option:';
+      input.required = true;
+      input.style.display = 'block';
+      document.getElementById('options').appendChild(input);
+      const delete_option = document.createElement('button');
+      delete_option.type = 'button';
+      delete_option.id = 'btn-delete_option';
+      delete_option.innerText = "Delete Option";
+      document.getElementById('options').appendChild(delete_option);
+
+      delete_option.addEventListener('click', function() {
+        document.getElementById('options').removeChild(group);
+        });
+
+      group.appendChild(input);
+      group.appendChild(delete_option);
+      document.getElementById('options').appendChild(group);
+    });
+
+</script>
 
 {% endblock %}

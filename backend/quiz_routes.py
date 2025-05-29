@@ -104,7 +104,7 @@ def create_question():
         return redirect(url_for('auth.login_get'))
 
     question_text = request.form['question_text']
-    options = [opt.strip() for opt in request.form['options'].split(',')]
+    options = request.form.getlist('options')
     answer = request.form['answer']
     category_id = int(request.form['kuiz_id'])
     visibility = request.form.get('visibility')
@@ -141,7 +141,7 @@ def edit_question(question_id):
     else:
         if request.method == 'POST':
             question.question_text = request.form['question_text']
-            question.options = [opt.strip() for opt in request.form['options'].split(',')]
+            question.options = request.form.getlist('options')
             question.answer = request.form['answer']
             question.visibility = request.form.get('visibility')
             db.session.commit()

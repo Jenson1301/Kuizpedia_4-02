@@ -17,7 +17,6 @@ class Kuiz(db.Model):
 
     questions = db.relationship('Question', backref='kuiz', lazy=True)
 
-
 class Question(db.Model):
     __tablename__ = 'question'
 
