@@ -20,8 +20,17 @@
 
         <br><br>
 
+        <label for="visibility">Filter by:</label>
+        <select name="visibility" id="visibility" required>
+            <option value="all">All Decks (Default)</option>
+            <option value="personal">Personal Deck</option>
+            <option value="public">Public Deck</option>
+        </select>
+
+        <br><br>
+
         <label for="num_questions">Number of questions:</label>
-        <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions|length }}" required>
+        <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions }}" required>
 
         <br><br>
 
@@ -33,6 +42,52 @@
     <form action="{{ url_for('kuiz.answer') }}" method="GET">
         <button type="submit">Back to Categories</button>
     </form>
+
+<script>
+    // Function to update max value of the number input
+    function updateMaxQuestions(visibleQuestions) {
+        const numQuestionsInput = document.getElementById('num_questions');
+        
+        // Ensure the input element exists
+        if (numQuestionsInput) {
+            console.log("Updating max questions with:", visibleQuestions);  // Check if this value is correct
+            numQuestionsInput.max = visibleQuestions;  // Update the max attribute
+
+            // If the current value exceeds the max, reset it
+            if (parseInt(numQuestionsInput.value) > visibleQuestions) {
+                numQuestionsInput.value = visibleQuestions;
+            }
+        } else {
+            console.error("num_questions input not found!");
+        }
+    }
+
+    // Wait for the DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        // Call this function when the page loads to set the max value
+        updateMaxQuestions({{ visible_questions }});
+
+        // Add event listener to the visibility filter
+        document.getElementById('visibility').addEventListener('change', function(event) {
+            const visibility = this.value;
+            const categoryId = document.querySelector('input[name="category_id"]').value;
+
+            // Send AJAX request to get the count of visible questions
+            fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update the max number of questions input with the new count
+                    updateMaxQuestions(data.count);
+                })
+                .catch(error => {
+                    console.error('Error fetching question count:', error);
+                });
+
+            // Prevent form submission when visibility filter changes
+            event.preventDefault();
+        });
+    });
+</script>
 
 </body>
 </html>
