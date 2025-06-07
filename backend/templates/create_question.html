@@ -40,14 +40,17 @@
 
 <script>
     document.getElementById('btn-add_option').addEventListener('click', function() {
+
       const group = document.createElement('div');
       group.style.marginTop = '5px';
+
       const input = document.createElement('input');
       input.type = 'text';
       input.name = 'options';
       input.placeholder = 'Add option:';
       input.required = true;
       input.style.display = 'block';
+      
       document.getElementById('options').appendChild(input);
       const delete_option = document.createElement('button');
       delete_option.type = 'button';
@@ -57,7 +60,7 @@
 
       delete_option.addEventListener('click', function() {
       document.getElementById('options').removeChild(group);
-    });
+      });
 
       group.appendChild(input);
       group.appendChild(delete_option);

@@ -272,15 +272,29 @@ def start_quiz():
     timer = request.args.get('timer', type=int)
 
     category = Kuiz.query.get_or_404(category_id)
-    questions = Question.query.filter(
-        or_(
-            Question.visibility == 'public',
+
+    filter_question = request.form.get('visibility')
+    if filter_question == 'personal':
+        questions = Question.query.filter(
             and_(
                 Question.visibility == 'personal',
                 Question.user_id == user.id
             )
-        )
-    ).filter_by(kuiz_id=category_id).all()
+        ).filter_by(kuiz_id=category_id).all()
+    elif filter_question == 'public':
+        questions = Question.query.filter(
+            Question.visibility == 'public'
+        ).filter_by(kuiz_id=category_id).all()
+    elif filter_question == 'all':
+        questions = Question.query.filter(
+            or_(
+                Question.visibility == 'public',
+                and_(
+                    Question.visibility == 'personal',
+                    Question.user_id == user.id
+                )
+            )
+        ).filter_by(kuiz_id=category_id).all()
 
     random.shuffle(questions)
 
@@ -298,7 +312,6 @@ def start_quiz():
 def choose_timer():
     category_id = request.args.get('category_id', type=int)
     category = Kuiz.query.get_or_404(category_id)
-
     user = get_logged_in_user()
     visible_questions = Question.query.filter(
         Question.kuiz_id == category.id,
@@ -309,9 +322,40 @@ def choose_timer():
                 Question.user_id == user.id
             )
         )
-    ).all()
-
+    ).count()
     return render_template('choose_timer.html', category=category, visible_questions=visible_questions)
+
+@kuiz_bp.route('/filter-question')
+def filter_question():
+    category_id = request.args.get('category_id', type=int)
+    category = Kuiz.query.get_or_404(category_id)
+    user = get_logged_in_user()
+    filter_question = request.args.get('visibility', 'all')
+    if filter_question == 'personal':
+        visible_questions = Question.query.filter(
+            Question.kuiz_id == category.id,
+            and_(
+                Question.visibility == 'personal',
+                Question.user_id == user.id
+            )
+        ).count()
+    elif filter_question == 'public':
+        visible_questions = Question.query.filter(
+            Question.kuiz_id == category.id,
+            Question.visibility == 'public'
+        ).count()
+    else:
+        visible_questions = Question.query.filter(
+            Question.kuiz_id == category.id,
+            or_(
+                Question.visibility == 'public',
+                and_(
+                    Question.visibility == 'personal',
+                    Question.user_id == user.id
+                )
+            )
+        ).count()
+    return jsonify({'count': visible_questions})
 
 @kuiz_bp.route('/logout', methods=['POST'])
 def logout():
