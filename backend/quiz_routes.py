@@ -271,7 +271,7 @@ def start_quiz():
     user = get_logged_in_user()
     category_id = request.args.get('category_id', type=int)
     num_questions = request.args.get('num_questions', type=int)
-    timer = request.args.get('timer', type=int)
+    timer_minutes = request.args.get('timer', type=int)  # timer now in minutes from user input
 
     category = Kuiz.query.get_or_404(category_id)
 
@@ -305,10 +305,12 @@ def start_quiz():
 
     questions = questions[:num_questions]
 
-    if not timer or timer <= 0:
-        timer = 60  # default timer 60 seconds
+    if not timer_minutes or timer_minutes < 1 or timer_minutes > 60:
+        timer_minutes = 1  # default 1 minute
 
-    return render_template('index.html', quizzes=questions, timer=timer, category=category)
+    timer_seconds = timer_minutes * 60  # convert minutes to seconds
+
+    return render_template('index.html', quizzes=questions, timer=timer_seconds, category=category)
 
 @kuiz_bp.route('/choose-timer')
 def choose_timer():

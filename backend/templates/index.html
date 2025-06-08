@@ -21,7 +21,7 @@
                     <input type="radio" 
                            id="q{{ quiz.id }}_{{ loop.index }}" 
                            name="question_{{ quiz.id }}" 
-                           value="{{ option }}" required>
+                           value="{{ option }}">
                     <label for="q{{ quiz.id }}_{{ loop.index }}">{{ option }}</label><br>
                 {% endfor %}
             </div>
@@ -32,8 +32,14 @@
 </form>
 
 <script>
-    let timeLeft = Number("{{ timer | default(30) }}");
+    let timeLeft = Number("{{ timer | default(60) }}");  // time in seconds
     const timerDisplay = document.getElementById("timer");
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}m ${secs}s`;
+    }
 
     const countdown = setInterval(() => {
         if (timeLeft <= 0) {
@@ -41,7 +47,7 @@
             alert("Time's up! Submit quiz now.");
             document.querySelector('form').submit();
         } else {
-            timerDisplay.textContent = `Time Left: ${timeLeft} seconds`;
+            timerDisplay.textContent = `Time Left: ${formatTime(timeLeft)}`;
             timeLeft--;
         }
     }, 1000);

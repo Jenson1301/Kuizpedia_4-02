@@ -20,6 +20,7 @@ def login_post():
     user = User.query.filter_by(username=username).first()
     if user:
         if user and user.check_password(password):
+            session.permanent = True
             session['user_id'] = user.id
             return redirect(url_for('kuiz.dashboard'))
         else:
