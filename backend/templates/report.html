@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <h1>Report Question</h1>
+        <h2>{{question.question_text}}</h2>
+        <h3>{{question.options}}</h3>
+        <form id="report-form" action="{{ url_for('kuiz.report', question_id=question.id) }}" method="post">
+            <label><input type="radio" name="reason" value="inaccurate">Inaccurate</label><br>
+            <label><input type="radio" name="reason" value="offensive">Offensive</label><br>
+            <label><input type="radio" name="reason" value="duplicate">Duplicate</label><br>
+            <label><input type="radio" name="reason" value="irrelevant">Irrelevant</label><br>
+            <label><input type="radio" name="reason" value="other"><input type="text"></label><br>
+            <br><input type="submit" value="Report" class="btn-report"/>
+        </form>
+    </div>
+    <br>
+    <button type="button" onclick="window.history.back();">Go Back</button>
+{% endblock %}

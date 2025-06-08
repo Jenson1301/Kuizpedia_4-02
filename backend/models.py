@@ -25,6 +25,7 @@ class Question(db.Model):
     options = db.Column(db.PickleType)
     answer = db.Column(db.String(100), nullable=False)
     visibility = db.Column(db.String, nullable=False)
+    report_count = db.Column(db.Integer, nullable=False)
     
     kuiz_id = db.Column(
         db.Integer,

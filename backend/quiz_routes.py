@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, session, flash
 from extensions import db
 from models import Question, Kuiz, User, QuizAttempt, QuizAttemptDetail
 from sqlalchemy import or_, and_
@@ -108,6 +108,7 @@ def create_question():
     answer = request.form['answer']
     category_id = int(request.form['kuiz_id'])
     visibility = request.form.get('visibility')
+    report_count = 0
 
     new_question = Question(
         question_text=question_text,
@@ -115,6 +116,7 @@ def create_question():
         answer=answer,
         kuiz_id=category_id,
         visibility = visibility,
+        report_count = report_count,
         user_id=user.id  # Track the creator
     )
 
@@ -273,7 +275,7 @@ def start_quiz():
 
     category = Kuiz.query.get_or_404(category_id)
 
-    filter_question = request.form.get('visibility')
+    filter_question = request.args.get('visibility')
     if filter_question == 'personal':
         questions = Question.query.filter(
             and_(
@@ -397,3 +399,35 @@ def dashboard():
     
     return render_template('dashboard.html', username=user.username, attempts=attempts)
 
+@kuiz_bp.route('/report/<question_id>', methods=['GET'])
+def report_form(question_id):
+    question = Question.query.get_or_404(question_id)
+    user = get_logged_in_user()
+    if not user:
+        return redirect(url_for('auth.login_get'))
+    if question.user_id == user.id:
+        return render_template(
+            'no_permission.html',
+            message="You cannot report your own question.",
+            back_url=url_for('kuiz.edit_category_form', category_id=question.kuiz_id)
+        ), 403
+    return render_template('report.html', question=question)
+
+@kuiz_bp.route('/report/<question_id>', methods=['POST'])
+def report(question_id):
+    question = Question.query.get_or_404(question_id)
+    report_count = question.report_count
+    category_id = question.kuiz_id
+    reason = request.form.get('reason')
+    if reason:
+        question.report_count += 1
+        db.session.commit()
+        redirect(url_for('kuiz.report.html', question=question))
+        flash('Report submitted.')
+        if report_count > 3:
+            db.session.delete(question)
+            db.session.commit()
+    else:
+        redirect(url_for('kuiz.report.html', question=question))
+        flash('Please choose a reason for reporting.')
+    return redirect(url_for('kuiz.edit_category_form', category_id=category_id))
