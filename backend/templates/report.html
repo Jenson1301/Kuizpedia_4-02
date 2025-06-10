@@ -6,14 +6,52 @@
         <h2>{{question.question_text}}</h2>
         <h3>{{question.options}}</h3>
         <form id="report-form" action="{{ url_for('kuiz.report', question_id=question.id) }}" method="post">
-            <label><input type="radio" name="reason" value="inaccurate">Inaccurate</label><br>
-            <label><input type="radio" name="reason" value="offensive">Offensive</label><br>
-            <label><input type="radio" name="reason" value="duplicate">Duplicate</label><br>
-            <label><input type="radio" name="reason" value="irrelevant">Irrelevant</label><br>
-            <label><input type="radio" name="reason" value="other"><input type="text"></label><br>
-            <br><input type="submit" value="Report" class="btn-report"/>
+            <label><input type="radio" name="reason" value="inaccurate"> Inaccurate</label><br>
+            <label><input type="radio" name="reason" value="offensive"> Offensive</label><br>
+            <label><input type="radio" name="reason" value="duplicate"> Duplicate</label><br>
+            <label><input type="radio" name="reason" value="irrelevant"> Irrelevant</label><br>
+            <label>
+                <input type="radio" name="reason" value="other" id="radio-other"> Other
+                <input type="text" id="other-text" name="other_text" placeholder="State a reason">
+            </label><br><br>
+
+            <input type="submit" value="Report" class="btn-report"/>
         </form>
     </div>
     <br>
     <button type="button" onclick="window.history.back();">Go Back</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const radioOther = document.getElementById('radio-other');
+    const otherText = document.getElementById('other-text');
+    const form = document.getElementById('report-form');
+    const allRadios = document.querySelectorAll('input[name="reason"]');
+
+    form.addEventListener('submit', function (submit) {
+        if (radioOther.checked && otherText.value.trim() === '') {
+            submit.preventDefault();
+            otherText.setCustomValidity('Please enter a reason.');
+            otherText.reportValidity();
+        } else {
+            otherText.setCustomValidity('');
+        }
+    });
+
+    otherText.addEventListener('input', function () {
+        if (otherText.value.trim() !== '') {
+            radioOther.checked = true;
+        }
+    });
+
+    allRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (radio.value !== 'other') {
+                otherText.setCustomValidity('');
+            }
+        });
+    });
+});
+</script>
+
 {% endblock %}
