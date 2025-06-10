@@ -424,12 +424,11 @@ def report(question_id):
     if reason:
         question.report_count += 1
         db.session.commit()
-        redirect(url_for('kuiz.report.html', question=question))
         flash('Report submitted.')
         if report_count > 3:
             db.session.delete(question)
             db.session.commit()
     else:
-        redirect(url_for('kuiz.report.html', question=question))
         flash('Please choose a reason for reporting.')
+        return render_template('report.html', question=question)
     return redirect(url_for('kuiz.edit_category_form', category_id=category_id))
