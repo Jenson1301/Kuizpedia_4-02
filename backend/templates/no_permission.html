@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Access Denied</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Access Denied{% endblock %}
+
+{% block body %}
     <h2>{{ message }}</h2>
     <form action="{{ back_url }}" method="GET">
         <button type="submit">Back</button>
     </form>
-</body>
-</html>
+{% endblock %}
