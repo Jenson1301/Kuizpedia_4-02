@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Choose Timer</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Choose Timer{% endblock %}
+
+{% block body %}
     <h1>Start Quiz: {{ category.name }}</h1>
 
     <form action="{{ url_for('kuiz.start_quiz') }}" method="GET">
@@ -73,6 +71,4 @@
         });
     });
 </script>
-
-</body>
-</html>
+{% endblock %}
