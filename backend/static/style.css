@@ -3,7 +3,7 @@ body {
     background-color: #128e24;
     padding: 20px;
     margin: 0;
-    
+
 }
  
 h1 {
@@ -127,3 +127,67 @@ main {
 .main-wrapper {
     padding-top: 100px; /* ✅ Must be greater than navbar height */
 }
+
+/* answers */
+.quiz-category-page {
+    max-width: 700px;
+    margin: 100px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.quiz-category-page h2 {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+}
+
+.btn-back {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    cursor: pointer;
+}
+
+.quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.quiz-card {
+    background-color: #f5faff;
+    border: 1px solid #cde4f7;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quiz-title {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.btn-answer {
+    background-color: #2d89ef;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-answer:hover {
+    background-color: #1c5fc4;
+}
+
