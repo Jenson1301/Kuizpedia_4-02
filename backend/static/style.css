@@ -1,7 +1,9 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #128e24;
     padding: 20px;
+    margin: 0;
+    
 }
  
 h1 {
@@ -35,4 +37,93 @@ button:hover {
     background-color: #2980b9;
 }
 
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background-color: #d9f0ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    z-index: 1000;
+}
 
+.navbar-left .logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #2a4d8f;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-right .welcome {
+    font-weight: bold;
+    color: #222;
+}
+
+.navbar-right a,
+.navbar-right .btn-logout {
+    text-decoration: none;
+    padding: 6px 12px;
+    background-color: #3478f6;
+    color: white;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.navbar-right a:hover {
+    background-color: #1d60c5;
+}
+
+main {
+    padding-top: 100px; /* Avoids content hidden under fixed navbar */
+}
+
+
+/* dashboard */
+.dashboard-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    text-align: center;
+}
+
+.quiz-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.quiz-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 220px;
+    text-align: left;
+}
+
+.quiz-btn:hover {
+    background-color: #2874a6;
+}
+
+
+.main-wrapper {
+    padding-top: 100px; /* ✅ Must be greater than navbar height */
+}

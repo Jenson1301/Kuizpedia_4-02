@@ -74,3 +74,8 @@ import os
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
+
+@app.route('/dashboard')
+def dashboard():
+    username = session.get('username', 'User')  # or however you store the login info
+    return render_template('dashboard.html', username=username)

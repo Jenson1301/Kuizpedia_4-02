@@ -5,8 +5,29 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
         <title>{% block title %}Kuizpedia{% endblock %}</title>
     </head>
+
+  <header>
+    <header class="navbar">
+    <div class="navbar-left">
+        <div class="logo">Kuizpedia</div>
+    </div>
+    <div class="navbar-right">
+        {% if username %}
+            <span class="welcome">Welcome, {{ username }}!</span>
+            <a href="{{ url_for('auth.logout') }}" class="btn-logout">Logout</a>
+        {% elif show_navbar %}
+            <a href="{{ url_for('auth.login_get') }}">login</a>
+            <a href="{{ url_for('auth.signup_get') }}">signup</a>
+        {% endif %}
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    </main>
+      
     <body>
 <div style="position: absolute; top: 10px; right: 10px;">
   {% if username %}
