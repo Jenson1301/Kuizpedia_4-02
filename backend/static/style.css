@@ -359,3 +359,145 @@ main {
 .btn-submit:hover {
     background-color: #1c5fc4;
 }
+
+
+/* score result */
+.result-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 100px;
+    min-height: 80vh;
+}
+
+.result-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.result-box h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+.result-summary {
+    font-size: 1.2em;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-result {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-result:hover {
+    background-color: #1c6ca1;
+}
+
+/* past attempts */
+.past-attempts-container {
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 20px 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.past-attempts-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    color: #2c3e50;
+}
+
+.attempt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.attempt-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f2f9ff;
+    padding: 15px 20px;
+    border: 1px solid #d0e7f5;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+}
+
+.attempt-text {
+    font-size: 1em;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.4;
+}
+
+.btn-review {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-review:hover {
+    background-color: #1c6ca1;
+}
+
+.btn-back {
+    background-color: #7f8c8d;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+}
+
+.btn-back:hover {
+    background-color: #5f6e73;
+}
+
+.no-attempts {
+    text-align: center;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.back-button {
+    display: flex;
+    justify-content: center;
+}
+
+.dashboard-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
