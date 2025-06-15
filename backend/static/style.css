@@ -569,3 +569,82 @@ main {
   background-color: #1c6ca1;
 }
 
+/* categories */
+.category-container {
+  max-width: 850px;
+  margin: 100px auto;
+  padding: 20px 30px;
+}
+
+.category-container h1 {
+  font-size: 1.8em;
+  margin-bottom: 25px;
+  color: #2c3e50;
+}
+
+.category-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-card {
+  background-color: #f7fbff;
+  padding: 18px 24px;
+  border: 1px solid #dbeefb;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-name {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.category-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #7f8c8d;
+  color: white;
+}
+
+.btn-edit {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
