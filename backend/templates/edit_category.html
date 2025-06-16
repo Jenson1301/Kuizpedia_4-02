@@ -1,35 +1,42 @@
 {% extends 'base.html' %}
 
+{% block title %}Edit Category - Kuizpedia{% endblock %}
+
 {% block body %}
-<h3>Questions in this Category</h3>
-<ul>
+<div class="question-container">
+  <h1>Questions in this Category</h1>
+
+  <div class="question-list">
     {% for question in questions %}
-        <li>
-            <strong>{{ question.question_text }}</strong>
-            <br>Options: {{ question.options | join(', ') }}
-            <br>Answer: {{ question.answer }}
-            <br>Visibility: {{ question.visibility }}
-            <br>
-            <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="GET" style="display:inline;">
-                <button type="submit">Edit Question</button>
-            </form>
-            <form method="POST" action="{{ url_for('kuiz.delete_question', question_id=question.id) }}" style="display:inline;" 
-                  onsubmit="return confirm('Are you sure you want to delete this question?')">
-                <button type="submit">🗑 Delete</button>
-            </form>
-            <form method="GET" action="{{ url_for('kuiz.report_form', question_id=question.id) }}" style="display:inline;">
-                <button type="submit">🗑 Report Question</button>
-            </form>
-        </li>
-        <hr>
+    <div class="question-card">
+      <h3>📘 {{ question.question_text }}</h3>
+      <p><strong>Options:</strong> {{ question.options | join(', ') }}</p>
+      <p><strong>Answer:</strong> {{ question.answer }}</p>
+      <p><strong>Visibility:</strong> {{ question.visibility }}</p>
+
+      <div class="question-actions">
+        <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="GET">
+          <button type="submit" class="btn btn-edit">✏️ Edit</button>
+        </form>
+        <form action="{{ url_for('kuiz.delete_question', question_id=question.id) }}" method="POST"
+              onsubmit="return confirm('Are you sure you want to delete this question?')">
+          <button type="submit" class="btn btn-delete">🗑 Delete</button>
+        </form>
+        <form action="{{ url_for('kuiz.report_form', question_id=question.id) }}" method="GET">
+          <button type="submit" class="btn btn-report">📢 Report</button>
+        </form>
+      </div>
+    </div>
     {% endfor %}
-</ul>
+  </div>
 
-<form action="{{ url_for('kuiz.create_question_form', category_id=category.id) }}" method="GET">
-    <button type="submit">Create New Question</button>
-</form>
-
-<form action="{{ url_for('kuiz.show_categories') }}" method="GET">
-    <button type="submit">← Back to Categories</button>
-</form>
+  <div class="question-buttons">
+    <form action="{{ url_for('kuiz.create_question_form', category_id=category.id) }}" method="GET">
+      <button type="submit" class="btn btn-primary">➕ Create New Question</button>
+    </form>
+    <form action="{{ url_for('kuiz.show_categories') }}" method="GET">
+      <button type="submit" class="btn btn-secondary">⬅️ Back to Categories</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
