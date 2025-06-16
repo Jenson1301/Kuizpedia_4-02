@@ -141,7 +141,7 @@ main {
 }
 
 .btn-answer {
-    background-color: #2d89ef;
+    background-color: #b17350;
     color: white;
     padding: 10px 16px;
     border: none;
@@ -203,7 +203,7 @@ main {
 }
 
 .btn-start {
-    background-color: #3478f6;
+    background-color: #b17350;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -261,7 +261,7 @@ main {
 .quiz-timer {
     font-weight: bold;
     font-size: 1.2em;
-    color: #2d89ef;
+    color: #e20825;
     margin-top: 10px;
 }
 
@@ -353,7 +353,7 @@ main {
 }
 
 .btn-result {
-    background-color: #3498db;
+    background-color: #b17350;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -411,7 +411,7 @@ main {
 }
 
 .btn-review {
-    background-color: #3498db;
+    background-color: #b17350;
     color: white;
     padding: 8px 16px;
     border: none;
@@ -510,7 +510,7 @@ main {
 }
 
 .btn-nav {
-  background-color: #3498db;
+  background-color: #b17350;
   color: white;
   padding: 10px 18px;
   border-radius: 6px;
@@ -677,7 +677,7 @@ main {
 }
 
 .btn-primary {
-  background-color: #1abc9c;
+  background-color: #b05a67;
 }
 
 .btn-secondary {
