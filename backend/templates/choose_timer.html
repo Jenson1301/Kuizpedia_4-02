@@ -3,39 +3,31 @@
 {% block title %}Choose Timer{% endblock %}
 
 {% block body %}
-<div class="quiz-setup-container">
-    <div class="quiz-setup-box">
-        <h2>Start Quiz: {{ category.name }} Quiz</h2>
+<div class="quiz-timer-container">
+    <h2>Start Quiz: {{ category.name }}</h2>
 
-        <form action="{{ url_for('kuiz.start_quiz') }}" method="GET">
-            <input type="hidden" name="category_id" value="{{ category.id }}">
+    <form class="quiz-form" action="{{ url_for('kuiz.start_quiz') }}" method="GET">
+        <input type="hidden" name="category_id" value="{{ category.id }}">
 
-            <div class="form-group">
-                <label for="timer">Enter your custom time (in minutes):</label>
-                <input type="number" id="timer" name="timer" min="1" max="60" value="1" required>
-                <small>(1 minute to 60 minutes max)</small>
-            </div>
+        <label for="timer">Enter your custom time (in minutes):</label>
+        <input type="number" id="timer" name="timer" min="1" max="60" value="1" required>
+        <small>(1 minute to 60 minutes max)</small>
 
-            <div class="form-group">
-                <label for="visibility">Filter by:</label>
-                <select name="visibility" id="visibility" required>
-                    <option value="all">All Decks (Default)</option>
-                    <option value="personal">Personal Deck</option>
-                    <option value="public">Public Deck</option>
-                </select>
-            </div>
+        <label for="visibility">Filter by:</label>
+        <select name="visibility" id="visibility" required>
+            <option value="all">All Decks (Default)</option>
+            <option value="personal">Personal Deck</option>
+            <option value="public">Public Deck</option>
+        </select>
 
-            <div class="form-group">
-                <label for="num_questions">Number of questions:</label>
-                <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions }}" required>
-            </div>
+        <label for="num_questions">Number of questions:</label>
+        <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions }}" required>
 
-            <div class="form-actions">
-                <button type="submit" class="btn-start">Start Quiz</button>
-                <a href="{{ url_for('kuiz.answer') }}" class="btn-back">Back to Categories</a>
-            </div>
-        </form>
-    </div>
+        <div class="button-group">
+            <button type="submit" class="btn-start">Start Quiz</button>
+            <a href="{{ url_for('kuiz.answer') }}" class="btn-secondary">Back to Categories</a>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -51,13 +43,17 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         updateMaxQuestions({{ visible_questions }});
-        document.getElementById('visibility').addEventListener('change', function (event) {
+        document.getElementById('visibility').addEventListener('change', function () {
             const visibility = this.value;
             const categoryId = document.querySelector('input[name="category_id"]').value;
             fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
                 .then(response => response.json())
-                .then(data => updateMaxQuestions(data.count))
-                .catch(error => console.error('Error fetching question count:', error));
+                .then(data => {
+                    updateMaxQuestions(data.count);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     });
 </script>

@@ -1,12 +1,12 @@
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f9ff;
+    background-color: #80b893;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    background-color: white;
+    background-color: rgb(247, 220, 225);
     width: 350px;
     margin: 80px auto;
     padding: 40px;
@@ -32,7 +32,7 @@ h1 {
 }
 
 .btn-login {
-    background-color: #3478f6;
+    background-color: #b17350;
     color: white;
     padding: 12px 20px;
     border: none;

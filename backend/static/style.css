@@ -1,50 +1,12 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #128e24;
-    padding: 20px;
-    margin: 0;
 
-}
- 
-h1 {
-    color: #333;
-}
- 
-form {
-    margin-bottom: 15px;
-}
- 
-label {
-    display: block;
-    margin-bottom: 5px;
-}
- 
-input[type="text"] {
-    padding: 8px;
-    width: 300px;
-    margin-bottom: 10px;
-}
- 
-button {
-    padding: 10px 15px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
- 
-button:hover {
-    background-color: #2980b9;
-}
-
-/* Navbar */
+/* navigation bar */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     height: 70px;
-    background-color: #d9f0ff;
+    background-color: #f7dce1;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -55,7 +17,7 @@ button:hover {
 .navbar-left .logo {
     font-size: 1.8em;
     font-weight: bold;
-    color: #2a4d8f;
+    color: #470808;
 }
 
 .navbar-right {
@@ -66,14 +28,14 @@ button:hover {
 
 .navbar-right .welcome {
     font-weight: bold;
-    color: #222;
+    color: #470808;
 }
 
 .navbar-right a,
 .navbar-right .btn-logout {
     text-decoration: none;
     padding: 6px 12px;
-    background-color: #3478f6;
+    background-color: #b17350;
     color: white;
     border-radius: 5px;
     font-weight: 600;
@@ -84,7 +46,7 @@ button:hover {
 }
 
 main {
-    padding-top: 100px; /* Avoids content hidden under fixed navbar */
+    padding-top: 100px; 
 }
 
 
@@ -107,7 +69,7 @@ main {
 }
 
 .quiz-btn {
-    background-color: #3498db;
+    background-color: #5c1414;
     color: white;
     padding: 12px 24px;
     font-size: 1em;
@@ -127,6 +89,7 @@ main {
 .main-wrapper {
     padding-top: 100px; /* ✅ Must be greater than navbar height */
 }
+
 
 /* answers */
 .quiz-category-page {
@@ -193,89 +156,79 @@ main {
 
 
 /* choose timer */
-.quiz-setup-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 100px;
-}
-
-.quiz-setup-box {
+.quiz-timer-container {
     background-color: #ffffff;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 100%;
     max-width: 500px;
-}
-
-.quiz-setup-box h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 1.6em;
-    color: #2c3e50;
-}
-
-.form-group {
-    margin-bottom: 20px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     text-align: left;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.form-group label {
+.quiz-timer-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 25px;
+}
+
+.quiz-form label {
     font-weight: bold;
+    margin-top: 15px;
     display: block;
-    margin-bottom: 8px;
+    color: #333;
 }
 
-.form-group input,
-.form-group select {
+.quiz-form input,
+.quiz-form select {
     width: 100%;
     padding: 10px;
-    font-size: 1em;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-.form-group small {
-    display: block;
     margin-top: 5px;
-    font-size: 0.85em;
-    color: #666;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1em;
 }
 
-.form-actions {
+.quiz-form small {
+    font-size: 0.85em;
+    color: #777;
+}
+
+.button-group {
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
+    align-items: center;
+    margin-top: 25px;
 }
 
-.btn-start,
-.btn-back {
-    padding: 10px 20px;
+.btn-start {
+    background-color: #3478f6;
+    color: white;
+    padding: 12px 20px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn-start:hover {
+    background-color: #245dcc;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
     text-decoration: none;
     text-align: center;
 }
 
-.btn-start {
-    background-color: #2d89ef;
-    color: white;
-}
-
-.btn-start:hover {
-    background-color: #1c5fc4;
-}
-
-.btn-back {
-    background-color: #95a5a6;
-    color: white;
-}
-
-.btn-back:hover {
-    background-color: #7f8c8d;
+.btn-secondary:hover {
+    background-color: #5a6268;
 }
 
 
@@ -359,7 +312,6 @@ main {
 .btn-submit:hover {
     background-color: #1c5fc4;
 }
-
 
 
 /* score result */
@@ -504,6 +456,7 @@ main {
     margin-top: 30px;
 }
 
+
 /* review attempts */
 .review-container {
   max-width: 850px;
@@ -568,6 +521,7 @@ main {
 .btn-nav:hover {
   background-color: #1c6ca1;
 }
+
 
 /* categories */
 .category-container {
@@ -647,6 +601,7 @@ main {
 .btn:hover {
   opacity: 0.9;
 }
+
 
 /* edit category */
 .question-container {
@@ -733,6 +688,7 @@ main {
   opacity: 0.9;
 }
 
+
 /* no permission */
 .access-denied-container {
     max-width: 600px;
@@ -773,4 +729,103 @@ main {
 }
 
 
+/* report */
+.back-btn-container {
+    text-align: center;
+    margin-top: 20px;
+}
 
+.btn-back {
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
+}
+
+
+/* create question */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f9ff;
+    margin: 0;
+    padding: 0;
+}
+
+.create-question-container {
+    width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-add {
+    background-color: #2d89ef;
+    color: white;
+}
+
+.btn-submit {
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-back {
+    margin-top: 20px;
+    background-color: #6c757d;
+    color: white;
+    width: 100%;
+}

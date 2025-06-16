@@ -2,71 +2,74 @@
 
 {% block title %}Create Question - Kuizpedia{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create_question.css') }}">
+{% endblock %}
+
 {% block body %}
-<h2>Create a New Question</h2>
-<form method="POST" action="{{ url_for('kuiz.create_question') }}">
-    <label>Question Text:</label><br>
-    <input type="text" name="question_text" required><br><br>
+<div class="create-question-container">
+    <h2>Create a New Question</h2>
+    <form method="POST" action="{{ url_for('kuiz.create_question') }}" id="question-form">
+        <label>Question Text:</label>
+        <input type="text" name="question_text" required>
 
-    <label>Options:</label><br>
-    <input type="text" name="options" placeholder="Add option:" required>
-    <div id="options"></div>
-    <br><button type="button" class="btn-add_option" id="btn-add_option">Add option</button><br><br>
+        <label>Options:</label>
+        <div id="options-container">
+            <input type="text" name="options" placeholder="Add option:" required>
+        </div>
+        <button type="button" class="btn-add" id="btn-add_option">Add Option</button>
 
-    <label>Answer:</label><br>
-    <input type="text" name="answer" required><br><br>
+        <label>Answer:</label>
+        <input type="text" name="answer" required>
 
-    <label>Category:</label><br>
-    <select name="kuiz_id" required>
-        {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-        {% endfor %}
-    </select><br><br>
+        <label>Category:</label>
+        <select name="kuiz_id" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label for="visibility">Visibility:</label>
-    <select name="visibility" id="visibility" required>
-        <option value="personal">Personal Deck</option>
-        <option value="public">Public Deck</option>
-    </select>
+        <label>Visibility:</label>
+        <select name="visibility" required>
+            <option value="personal">Personal Deck</option>
+            <option value="public">Public Deck</option>
+        </select>
 
-    <button type="submit">Add Question</button>
-</form>
+        <button type="submit" class="btn-submit">Add Question</button>
+    </form>
 
-{% if category_id %}
-  <form action="{{ url_for('kuiz.edit_category_form', category_id=category_id) }}">
-    <button type="submit">Go Back to Edit Category</button>
-  </form>
-{% endif %}
+    {% if category_id %}
+    <form action="{{ url_for('kuiz.edit_category_form', category_id=category_id) }}">
+        <button type="submit" class="btn-back">Go Back to Edit Category</button>
+    </form>
+    {% endif %}
+</div>
 
 <script>
-    document.getElementById('btn-add_option').addEventListener('click', function() {
+document.getElementById('btn-add_option').addEventListener('click', function () {
+    const container = document.getElementById('options-container');
 
-      const group = document.createElement('div');
-      group.style.marginTop = '5px';
+    const group = document.createElement('div');
+    group.className = 'option-group';
 
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.name = 'options';
-      input.placeholder = 'Add option:';
-      input.required = true;
-      input.style.display = 'block';
-      
-      document.getElementById('options').appendChild(input);
-      const delete_option = document.createElement('button');
-      delete_option.type = 'button';
-      delete_option.id = 'btn-delete_option';
-      delete_option.innerText = "Delete Option";
-      document.getElementById('options').appendChild(delete_option);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.name = 'options';
+    input.placeholder = 'Add option:';
+    input.required = true;
 
-      delete_option.addEventListener('click', function() {
-      document.getElementById('options').removeChild(group);
-      });
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'btn-delete';
+    deleteBtn.innerText = 'Delete Option';
 
-      group.appendChild(input);
-      group.appendChild(delete_option);
-      document.getElementById('options').appendChild(group);
+    deleteBtn.addEventListener('click', function () {
+        container.removeChild(group);
     });
 
+    group.appendChild(input);
+    group.appendChild(deleteBtn);
+    container.appendChild(group);
+});
 </script>
-
 {% endblock %}
