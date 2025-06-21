@@ -327,7 +327,7 @@ def choose_timer():
             )
         )
     ).count()
-    return render_template('choose_timer.html', category=category, visible_questions=visible_questions)
+    return render_template('choose_timer.html', category=category, visible_questions=visible_questions, category_id=category_id)
 
 @kuiz_bp.route('/filter-question')
 def filter_question():
