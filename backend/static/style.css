@@ -26,6 +26,7 @@
     right: 0;
     height: 70px;
     background-color: #f7dce1;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,10 +34,14 @@
     z-index: 1000;
 }
 
+.navbar-left a {    
+    text-decoration: none;
+    color: #470808;
+}
+
 .navbar-left .logo {
     font-size: 1.8em;
     font-weight: bold;
-    color: #470808;
 }
 
 .navbar-right {
