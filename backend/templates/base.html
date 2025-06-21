@@ -40,9 +40,10 @@
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <div class="flash-messages">
+        <div class="flash-messages" id="flash_id">
           {% for message in messages %}
-            <p>{{ message }}</p>
+            <p class="flash-messages-text">{{ message }}</p>
+            <a onclick='removeFlash()' style="display:inline; margin-inline: 20px; cursor: pointer;">×</a>
           {% endfor %}
         </div>
       {% endif %}
@@ -51,5 +52,12 @@
 
     {% block body %}
     {% endblock %}
+
+<script>
+function removeFlash() {
+  const element = document.getElementById('flash_id');
+  element.remove();
+}
+</script>
 </body>
 </html>

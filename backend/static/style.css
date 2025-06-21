@@ -1,3 +1,22 @@
+.flash-messages {
+    position: fixed;
+    left: 0;
+    right: 0;
+    background-color: #f7fbff;
+    border: 1px solid #dbeefb;
+    border-radius: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-inline: 20px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #34495e;
+}
+
+.flash-messages-text {
+    margin-inline-start: 30px;
+}
 
 /* navigation bar */
 .navbar {
@@ -868,7 +887,7 @@ label {
 }
 
 input[type="text"] {
-    padding: 10px 12px;
+    margin: 10px -10px;
     font-size: 16px;
     border-radius: 6px;
     border: 1px solid #ccc;
