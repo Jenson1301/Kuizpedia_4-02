@@ -3,51 +3,58 @@
 {% block title %}Quiz - Kuizpedia{% endblock %}
 
 {% block body %}
-<header>
-    <h1>Welcome to Kuizpedia!</h1>
-    <p>Your fun quiz platform</p>
-</header>
+<div class="quiz-container">
+    <header class="quiz-header">
+        <h1>Good luck answering this quiz!</h1>
+        <p>Don't stress, just guess. You got this!</p>
+        <div id="timer" class="quiz-timer"></div>
+    </header>
 
-<div id="timer" style="font-weight: bold; font-size: 18px; margin-bottom: 20px;"></div>
+    <section class="quiz-content">
+        <h2>📝 Answer the following questions:</h2>
 
-<h2>Answer the following questions:</h2>
-
-<form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
-    {% for quiz in quizzes %}
-        <div class="quiz-item">
-            <h3>{{ quiz.question_text }}</h3>
-            <div>
-                {% for option in quiz.options %}
-                    <input type="radio" 
-                           id="q{{ quiz.id }}_{{ loop.index }}" 
-                           name="question_{{ quiz.id }}" 
-                           value="{{ option }}">
-                    <label for="q{{ quiz.id }}_{{ loop.index }}">{{ option }}</label><br>
-                {% endfor %}
+        <form action="{{ url_for('kuiz.submit_quiz') }}" method="POST">
+            {% for quiz in quizzes %}
+                <div class="quiz-item">
+                    <p class="question-text">{{ loop.index }}. {{ quiz.question_text }}</p>
+                    <div class="quiz-options">
+                        {% for option in quiz.options %}
+                            <label class="quiz-option">
+                                <input type="radio" 
+                                       id="q{{ quiz.id }}_{{ loop.index }}" 
+                                       name="question_{{ quiz.id }}" 
+                                       value="{{ option }}" required>
+                                {{ option }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+            <div class="quiz-actions">
+                <button type="submit" class="btn-submit">Submit Answers</button>
             </div>
-        </div>
-        <hr>
-    {% endfor %}
-    <button type="submit">Submit Answers</button>
-</form>
+        </form>
+    </section>
+</div>
 
 <script>
-    let timeLeft = Number("{{ timer | default(60) }}");  // time in seconds
+    let timeLeft = Number("{{ timer | default(60) }}");
     const timerDisplay = document.getElementById("timer");
 
     function formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
-        return `${mins}m ${secs}s`;
+        return `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
     }
 
     const countdown = setInterval(() => {
         if (timeLeft <= 0) {
             clearInterval(countdown);
-            alert("Time's up! Submit quiz now.");
+            alert("Time's up! Submitting quiz.");
             document.querySelector('form').submit();
         } else {
-            timerDisplay.textContent = `Time Left: ${formatTime(timeLeft)}`;
+            timerDisplay.textContent = `⏱️ Time Left: ${formatTime(timeLeft)}`;
             timeLeft--;
         }
     }, 1000);

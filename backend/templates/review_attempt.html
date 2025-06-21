@@ -1,34 +1,37 @@
 {% extends 'base.html' %}
 
-{% block title %}Review Attempt{% endblock %}
+{% block title %}Review Attempt - Kuizpedia{% endblock %}
 
 {% block body %}
-<h1>Review: {{ attempt.kuiz.name }}</h1>
-<p>Score: {{ attempt.score }}/{{ attempt.total }}</p>
+<div class="review-container">
+  <div class="review-card">
+    <h1>Review: {{ attempt.kuiz.name }}</h1>
+    <p class="review-score">Score: {{ attempt.score }}/{{ attempt.total }}</p>
+    <hr>
 
-{% for detail in details %}
-  <div>
-    <h3>{{ detail.question.question_text }}</h3>
-    <p>Your answer: <strong>{{ detail.user_answer }}</strong></p>
-    {% if detail.user_answer.strip()|lower != detail.correct_answer.strip()|lower %}
-      <p style="color:red;">Correct answer: {{ detail.correct_answer }}</p>
-    {% else %}
-      <p style="color:green;">Correct!</p>
-    {% endif %}
+    {% for detail in details %}
+    <div class="question-card">
+      <h3>{{ loop.index }}. {{ detail.question.question_text }}</h3>
+      <p><strong>Your answer:</strong> 
+        {% if detail.user_answer.strip()|lower != detail.correct_answer.strip()|lower %}
+          <span class="incorrect">{{ detail.user_answer }}</span>
+        {% else %}
+          <span class="correct">{{ detail.user_answer }}</span>
+        {% endif %}
+      </p>
+      {% if detail.user_answer.strip()|lower != detail.correct_answer.strip()|lower %}
+        <p class="correct-answer">✅ Correct answer: <strong>{{ detail.correct_answer }}</strong></p>
+      {% else %}
+        <p class="correct-answer" style="color:green;">✔ You got it right!</p>
+      {% endif %}
+    </div>
+    <hr>
+    {% endfor %}
+
+    <div class="review-buttons">
+      <a href="{{ url_for('kuiz.dashboard') }}" class="btn-nav">🏠 Back to Dashboard</a>
+      <a href="{{ url_for('kuiz.past_attempts') }}" class="btn-nav">📘 Back to Past Attempts</a>
+    </div>
   </div>
-  <hr>
-{% endfor %}
-
-<div>
-  <form action="{{ url_for('kuiz.dashboard') }}" method="GET" style="display:inline;">
-    <button type="submit">🏠 Back to Dashboard</button>
-  </form>
 </div>
-
-<div>
-  <form action="{{ url_for('kuiz.past_attempts') }}" method="GET" style="display:inline;">
-    <button type="submit">⬅️ Back to Past Attempts</button>
-  </form>
-</div>
-
 {% endblock %}

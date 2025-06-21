@@ -1,25 +1,35 @@
 {% extends 'base.html' %}
 
-{% block title %}Past Attempts{% endblock %}
+{% block title %}Past Attempts - Kuizpedia{% endblock %}
 
 {% block body %}
-<h1>Your Past Quiz Attempts</h1>
+<div class="past-attempts-container">
+  <h1>Your Past Quiz Attempts</h1>
 
-<ul>
-  {% for attempt in attempts %}
-    <li>
-      Quiz: {{ attempt.kuiz.name }} - Score: {{ attempt.score }}/{{ attempt.total }} 
-      <form action="{{ url_for('kuiz.review_attempt', attempt_id=attempt.id) }}" method="GET" style="display:inline;">
-        <button type="submit">Review</button>
+  {% if attempts %}
+  <div class="attempt-list">
+    {% for attempt in attempts %}
+    <div class="attempt-card">
+      <div class="attempt-text">
+        📘 Quiz: {{ attempt.kuiz.name if attempt.kuiz else 'Unknown Quiz' }}<br>
+        📝 Score: {{ attempt.score }}/{{ attempt.total }}
+      </div>
+      <form action="{{ url_for('kuiz.review_attempt', attempt_id=attempt.id) }}" method="GET">
+        <button type="submit" class="btn-review">Review</button>
       </form>
-    </li>
+    </div>
+    {% endfor %}
+  </div>
   {% else %}
-    <li>You have no past attempts.</li>
-  {% endfor %}
-</ul>
+  <p class="no-attempts">You have no past attempts.</p>
+  {% endif %}
 
-<form action="{{ url_for('kuiz.dashboard') }}" method="GET">
-  <button type="submit">🏠 Back to Dashboard</button>
-</form>
+ <div class="dashboard-button-wrapper">
+  <form action="{{ url_for('kuiz.dashboard') }}" method="GET">
+    <button type="submit" class="btn-back">🏠 Back to Dashboard</button>
+  </form>
+</div>
+
+
 
 {% endblock %}

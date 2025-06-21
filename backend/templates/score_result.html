@@ -3,15 +3,20 @@
 {% block title %}Quiz Result - Kuizpedia{% endblock %}
 
 {% block body %}
-<h1>Your Score</h1>
-<p>You got {{ score }} out of {{ total }} correct!</p>
-<form action="{{ url_for('kuiz.answer') }}" method="GET" style="display:inline;">
-  <button type="submit">Back to Categories</button>
-</form>
+<div class="result-container">
+  <div class="result-box">
+    <h1>Your Score</h1>
+    <p class="result-summary">You got <strong>{{ score }}</strong> out of <strong>{{ total }}</strong> correct!</p>
 
-<div>
-  <form action="{{ url_for('kuiz.dashboard') }}" method="GET" style="display:inline; margin-top: 20px;">
-    <button type="submit">🏠 Back to Dashboard</button>
-  </form>
+    <div class="result-actions">
+      <form action="{{ url_for('kuiz.answer') }}" method="GET">
+        <button type="submit" class="btn-result">🔙 Back to Categories</button>
+      </form>
+
+      <form action="{{ url_for('kuiz.dashboard') }}" method="GET">
+        <button type="submit" class="btn-result">🏠 Back to Dashboard</button>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

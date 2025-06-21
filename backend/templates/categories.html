@@ -3,32 +3,29 @@
 {% block title %}Select Category - Kuizpedia{% endblock %}
 
 {% block body %}
-<h1>Select a Quiz Category</h1>
-<a href="{{ url_for('kuiz.add_category_form') }}">
-    <button>Add New Category</button>
-</a>
+<div class="category-container">
+  <h1>Select a Quiz Category</h1>
 
-<div style="margin-top: 20px;">
-  <form action="{{ url_for('kuiz.dashboard') }}" method="get" style="display:inline;">
-    <button type="submit">🏠 Back to Dashboard</button>
-  </form>
-</div>
+  <div class="category-actions">
+    <a href="{{ url_for('kuiz.add_category_form') }}" class="btn btn-primary">➕ Add New Category</a>
+    <a href="{{ url_for('kuiz.dashboard') }}" class="btn btn-secondary">🏠 Back to Dashboard</a>
+  </div>
 
-<ul>
+  <div class="category-list">
     {% for category in categories %}
-<li>
-    <strong>{{ category.name }}</strong>
-
-    <form action="{{ url_for('kuiz.edit_category_form', category_id=category.id) }}" method="GET" style="display: inline;">
-        <button type="submit" class="btn btn-secondary">Edit Category</button>
-    </form>
-
-    <form method="POST" action="{{ url_for('kuiz.delete_category', category_id=category.id) }}" 
-          onsubmit="return confirm('Are you sure you want to delete this category? All associated questions will also be deleted?');"
-          style="display: inline;">
-        <button type="submit" class="btn btn-danger">🗑 Delete</button>
-    </form>
-</li>
+    <div class="category-card">
+      <div class="category-name">📘 {{ category.name }}</div>
+      <div class="category-controls">
+        <form action="{{ url_for('kuiz.edit_category_form', category_id=category.id) }}" method="GET" style="display:inline;">
+          <button type="submit" class="btn btn-edit">Edit</button>
+        </form>
+        <form action="{{ url_for('kuiz.delete_category', category_id=category.id) }}" method="POST" style="display:inline;"
+              onsubmit="return confirm('Are you sure you want to delete this category? All associated questions will also be deleted?');">
+          <button type="submit" class="btn btn-delete">🗑 Delete</button>
+        </form>
+      </div>
+    </div>
     {% endfor %}
-</ul>
+  </div>
+</div>
 {% endblock %}

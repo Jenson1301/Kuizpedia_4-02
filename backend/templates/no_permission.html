@@ -2,9 +2,16 @@
 
 {% block title %}Access Denied{% endblock %}
 
+{% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/access_denied.css') }}">
+{% endblock %}
+
 {% block body %}
-    <h2>{{ message }}</h2>
+<div class="access-denied-container">
+    <h2 class="error-title">🚫 {{ message }}</h2>
+    <p class="error-description">You do not have permission to perform this action.</p>
     <form action="{{ back_url }}" method="GET">
-        <button type="submit">Back</button>
+        <button type="submit" class="btn-back">⬅️ Back</button>
     </form>
+</div>
 {% endblock %}
