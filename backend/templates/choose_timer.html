@@ -4,30 +4,34 @@
 
 {% block body %}
 <div class="quiz-timer-container">
-    <h2>Start Quiz: {{ category.name }}</h2>
+    {% if visible_questions %}
+        <h2>Start Quiz: {{ category.name }}</h2>
 
-    <form class="quiz-form" action="{{ url_for('kuiz.start_quiz') }}" method="GET">
-        <input type="hidden" name="category_id" value="{{ category.id }}">
+        <form class="quiz-form" action="{{ url_for('kuiz.start_quiz') }}" method="GET">
+            <input type="hidden" name="category_id" value="{{ category.id }}">
 
-        <label for="timer">Enter your custom time (in minutes):</label>
-        <input type="number" id="timer" name="timer" min="1" max="60" value="1" required>
-        <small>(1 minute to 60 minutes max)</small>
+            <label for="timer">Enter your custom time (in minutes):</label>
+            <input type="number" id="timer" name="timer" min="1" max="60" value="1" required>
+            <small>(1 minute to 60 minutes max)</small>
 
-        <label for="visibility">Filter by:</label>
-        <select name="visibility" id="visibility" required>
-            <option value="all">All Decks (Default)</option>
-            <option value="personal">Personal Deck</option>
-            <option value="public">Public Deck</option>
-        </select>
+            <label for="visibility">Filter by:</label>
+            <select name="visibility" id="visibility" required>
+                <option value="all">All Decks (Default)</option>
+                <option value="personal">Personal Deck</option>
+                <option value="public">Public Deck</option>
+            </select>
 
-        <label for="num_questions">Number of questions:</label>
-        <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions }}" required>
+            <label for="num_questions">Number of questions:</label>
+            <input type="number" id="num_questions" name="num_questions" min="1" max="{{ visible_questions }}" required>
 
-        <div class="button-group">
-            <button type="submit" class="btn-start">Start Quiz</button>
-            <a href="{{ url_for('kuiz.answer') }}" class="btn-secondary">Back to Categories</a>
-        </div>
-    </form>
+            <div class="button-group">
+                <button type="submit" class="btn-start">Start Quiz</button>
+                <a href="{{ url_for('kuiz.answer') }}" class="btn-secondary">Back to Categories</a>
+            </div>
+        </form>
+    {% else %}
+    <p class="no-attempts">There are no questions in this category yet. Add a question <a href="{{ url_for('kuiz.create_question_form', category_id=category.id) }}">here!</a></p>
+    {% endif %}
 </div>
 
 <script>

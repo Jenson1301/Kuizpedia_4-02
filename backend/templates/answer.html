@@ -10,15 +10,19 @@
     </form>
 
     <div class="quiz-list">
-        {% for category in categories %}
-        <div class="quiz-card">
-            <div class="quiz-title">📘 {{ category.name }} Quiz</div>
-            <form action="{{ url_for('kuiz.choose_timer') }}" method="GET">
-                <input type="hidden" name="category_id" value="{{ category.id }}">
-                <button type="submit" class="btn-answer">Answer Questions</button>
-            </form>
-        </div>
-        {% endfor %}
+        {% if categories %}
+            {% for category in categories %}
+            <div class="quiz-card">
+                <div class="quiz-title">📘 {{ category.name }} Quiz</div>
+                <form action="{{ url_for('kuiz.choose_timer') }}" method="GET">
+                    <input type="hidden" name="category_id" value="{{ category.id }}">
+                    <button type="submit" class="btn-answer">Answer Questions</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+        <p class="no-attempts">There are no categories yet. Create a category <a href="{{ url_for('kuiz.add_category_form') }}">here!</a></p>
+        {% endif %}
     </div>
 
 </div>
