@@ -59,8 +59,11 @@ class User(db.Model, UserMixin):
     @staticmethod
     def verify_token(token):
         seq = Serializer(current_app.config['SECRET_KEY'])
-        data = seq.loads(token, max_age = 300)
-        return data['user_id']
+        try:
+            data = seq.loads(token, max_age = 300)
+            return data['user_id']
+        except:
+            return None
 
 
 class QuizAttempt(db.Model):
