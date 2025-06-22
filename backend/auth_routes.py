@@ -45,7 +45,7 @@ def signup_post():
         flash('User already registered.')
         return redirect(url_for('auth.login_get'))
 
-    if not re.search(r'mmu.edu.my', email):
+    if not re.search(r'mmu\.edu\.my$', email):
         flash('Only MMU email addresses allowed.')
         return redirect(url_for('auth.signup_get'))
 
