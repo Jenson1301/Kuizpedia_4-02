@@ -108,7 +108,7 @@ def create_question():
     answer = request.form['answer']
     category_id = int(request.form['kuiz_id'])
     visibility = request.form.get('visibility')
-    report_count = 0
+    report_count = 1
 
     new_question = Question(
         question_text=question_text,
@@ -425,7 +425,7 @@ def report(question_id):
         question.report_count += 1
         db.session.commit()
         flash('Report submitted.')
-        if report_count > 3:
+        if report_count >= 3:
             db.session.delete(question)
             db.session.commit()
     else:
