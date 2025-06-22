@@ -37,16 +37,13 @@
 <script>
     function updateMaxQuestions(visibleQuestions) {
         const numQuestionsInput = document.getElementById('num_questions');
-        if (numQuestionsInput) {
-            numQuestionsInput.max = visibleQuestions;
-            if (parseInt(numQuestionsInput.value) > visibleQuestions) {
-                numQuestionsInput.value = visibleQuestions;
-            }
+        numQuestionsInput.max = visibleQuestions;
+        if (parseInt(numQuestionsInput.value) > visibleQuestions) {
+            numQuestionsInput.value = visibleQuestions;
         }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        updateMaxQuestions({{ visible_questions }});
         document.getElementById('visibility').addEventListener('change', function () {
             const visibility = this.value;
             const categoryId = document.querySelector('input[name="category_id"]').value;
@@ -55,9 +52,6 @@
                 .then(data => {
                     updateMaxQuestions(data.count);
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
         });
     });
 </script>
