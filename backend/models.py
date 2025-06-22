@@ -56,6 +56,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
     
+    @staticmethod
     def verify_token(token):
         seq = Serializer(current_app.config['SECRET_KEY'])
         data = seq.loads(token, max_age = 300)
