@@ -58,8 +58,8 @@ class User(db.Model, UserMixin):
     
     def verify_token(token):
         seq = Serializer(current_app.config['SECRET_KEY'])
-        url = seq.loads(token, max_age = 300)
-        return url['user_id']
+        data = seq.loads(token, max_age = 300)
+        return data['user_id']
 
 
 class QuizAttempt(db.Model):
