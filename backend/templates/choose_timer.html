@@ -43,16 +43,14 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('visibility').addEventListener('change', function () {
-            const visibility = this.value;
-            const categoryId = document.querySelector('input[name="category_id"]').value;
-            fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
-                .then(response => response.json())
-                .then(data => {
-                    updateMaxQuestions(data.count);
-                })
-        });
+    document.getElementById('visibility').addEventListener('change', function () {
+        const visibility = this.value;
+        const categoryId = document.querySelector('input[name="category_id"]').value;
+        fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
+            .then(response => response.json())
+            .then(data => {
+                updateMaxQuestions(data.count);
+            })
     });
 </script>
 {% endblock %}
