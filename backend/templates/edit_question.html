@@ -42,6 +42,30 @@
 <button type="button" onclick="window.history.back();">Go Back</button>
 
 <script>
+    document.getElementById('btn-add_option').addEventListener('click', function() {
+        const group = document.createElement('div');
+        group.style.marginTop = '5px';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'options';
+        input.placeholder = 'Add option:';
+        input.required = true;
+        input.style.display = 'block';
+        document.getElementById('options').appendChild(input);
+        const delete_option = document.createElement('button');
+        delete_option.type = 'button';
+        delete_option.id = 'btn-delete_option';
+        delete_option.innerText = "×";
+        document.getElementById('options').appendChild(delete_option);
+
+        delete_option.addEventListener('click', function() {
+            document.getElementById('options').removeChild(group);
+            });
+
+        group.appendChild(input);
+        group.appendChild(delete_option);
+        document.getElementById('options').appendChild(group);
+    });
     document.querySelectorAll('.btn-delete-option').forEach(btn => {
         btn.addEventListener('click', function () {
             if (document.getElementById('options').querySelectorAll('.option-group').length > 1) {
@@ -51,32 +75,6 @@
             }
         });
     });
-
-    document.getElementById('btn-add_option').addEventListener('click', function() {
-      const group = document.createElement('div');
-      group.style.marginTop = '5px';
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.name = 'options';
-      input.placeholder = 'Add option:';
-      input.required = true;
-      input.style.display = 'block';
-      document.getElementById('options').appendChild(input);
-      const delete_option = document.createElement('button');
-      delete_option.type = 'button';
-      delete_option.id = 'btn-delete_option';
-      delete_option.innerText = "×";
-      document.getElementById('options').appendChild(delete_option);
-
-      delete_option.addEventListener('click', function() {
-        document.getElementById('options').removeChild(group);
-        });
-
-      group.appendChild(input);
-      group.appendChild(delete_option);
-      document.getElementById('options').appendChild(group);
-    });
-
 </script>
 
 {% endblock %}
