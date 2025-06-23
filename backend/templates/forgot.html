@@ -2,10 +2,6 @@
 
 {% block body %}
 
-{% for message in get_flashed_messages() %}
-    {{ message }}
-{% endfor %}
-
 <div class="container">
     <h1>Forgot Password</h1>
     <form id="forgot-form" action="{{ url_for('auth.forgot_password_post') }}" method="post">

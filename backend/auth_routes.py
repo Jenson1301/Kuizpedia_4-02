@@ -49,6 +49,10 @@ def signup_post():
         flash('Only MMU email addresses allowed.')
         return redirect(url_for('auth.signup_get'))
 
+    if User.query.filter_by(username=username).first():
+        flash('Username is already used.')
+        return redirect(url_for('auth.signup_get'))
+
     if password != confirmpassword:
         flash('Passwords do not match.')
         return redirect(url_for('auth.signup_get'))

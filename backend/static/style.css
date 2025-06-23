@@ -700,6 +700,11 @@ main {
   background-color: #3498db;
 }
 
+.btn-report-question {
+    background-color: #dc3545;
+    color: white;
+}
+
 .btn-primary {
   background-color: #b05a67;
 }
