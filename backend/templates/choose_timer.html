@@ -8,7 +8,7 @@
         <h2>Start Quiz: {{ category.name }}</h2>
 
         <form class="quiz-form" action="{{ url_for('kuiz.start_quiz') }}" method="GET">
-            <input type="hidden" name="category_id" value="{{ category.id }}">
+            <input type="hidden" name="category_id" id="category_id" value="{{ category.id }}">
 
             <label for="timer">Enter your custom time (in minutes):</label>
             <input type="number" id="timer" name="timer" min="1" max="60" value="1" required>
@@ -35,6 +35,15 @@
 </div>
 
 <script>
+    document.getElementById('visibility').addEventListener('change', function () {
+        const visibility = this.value;
+        const categoryId = document.getElementById('category_id').value;
+        fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
+            .then(response => response.json())
+            .then(data => {
+                updateMaxQuestions(data.count);
+            })
+    });
     function updateMaxQuestions(visibleQuestions) {
         const numQuestionsInput = document.getElementById('num_questions');
         numQuestionsInput.max = visibleQuestions;
@@ -42,15 +51,5 @@
             numQuestionsInput.value = visibleQuestions;
         }
     }
-
-    document.getElementById('visibility').addEventListener('change', function () {
-        const visibility = this.value;
-        const categoryId = document.querySelector('input[name="category_id"]').value;
-        fetch(`/filter-question?category_id=${categoryId}&visibility=${visibility}`)
-            .then(response => response.json())
-            .then(data => {
-                updateMaxQuestions(data.count);
-            })
-    });
 </script>
 {% endblock %}
