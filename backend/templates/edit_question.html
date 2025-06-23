@@ -3,43 +3,45 @@
 {% block title %}Edit Question - Kuizpedia{% endblock %}
 
 {% block body %}
-<h1>Edit Question</h1>
+<div class="edit-question-container">
+    <h1>Edit Question</h1>
 
-<form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="POST">
-    <div>
-        <label for="question_text">Question:</label>
-        <input type="text" id="question_text" name="question_text" value="{{ question.question_text }}" required>
-    </div>
-    
-    <div>
-        <label>Options:</label>
-        <div id="options">
-            {% for option in question.options %}
-            <div class="option-group">
-                <input type="text" name="options" value="{{ option }}" required>
-                <button type="button" class="btn-delete-option">×</button>
-            </div>
-            {% endfor %}
+    <form action="{{ url_for('kuiz.edit_question', question_id=question.id) }}" method="POST">
+        <div>
+            <label for="question_text">Question:</label>
+            <input type="text" id="question_text" name="question_text" value="{{ question.question_text }}" required>
         </div>
-        <br><button type="button" class="btn-add_option" id="btn-add_option">Add option</button><br><br>
-    </div>
+        
+        <div>
+            <label>Options:</label>
+            <div id="options">
+                {% for option in question.options %}
+                <div class="option-group">
+                    <input type="text" name="options" value="{{ option }}" required>
+                    <button type="button" class="btn-delete-option">×</button>
+                </div>
+                {% endfor %}
+            </div>
+            <br><button type="button" class="btn-add_option" id="btn-add_option">Add option</button><br><br>
+        </div>
 
-    <div>
-        <label for="answer">Correct Answer:</label>
-        <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
-    </div>
+        <div>
+            <label for="answer">Correct Answer:</label>
+            <input type="text" id="answer" name="answer" value="{{ question.answer }}" required>
+        </div>
 
-    <label for="visibility">Visibility:</label>
-    <select name="visibility" id="visibility" required>
-        <option value="personal">Personal Deck</option>
-        <option value="public">Public Deck</option>
-    </select>
+        <label for="visibility">Visibility:</label>
+        <select name="visibility" id="visibility" required>
+            <option value="personal">Personal Deck</option>
+            <option value="public">Public Deck</option>
+        </select>
 
-    <button type="submit">Submit Changes</button>
-</form>
+        <button type="submit" class="btn-submit">Submit Changes</button>
+    </form>
 
-<br>
-<button type="button" onclick="window.history.back();">Go Back</button>
+    <br>
+    <button type="button" class="btn-back" onclick="window.history.back();">Go Back</button>
+</div>
 
 <script>
     document.getElementById('btn-add_option').addEventListener('click', function() {

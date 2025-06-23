@@ -94,7 +94,7 @@ def submit_quiz():
 @kuiz_bp.route('/create-question', methods=['GET'])
 def create_question_form():
     categories = Kuiz.query.all()
-    category_id = request.args.get('category_id')  
+    category_id = request.args.get('category_id')
     return render_template('create_question.html', categories=categories, category_id=category_id)
 
 @kuiz_bp.route('/create-question', methods=['POST'])

@@ -855,6 +855,85 @@ button {
 }
 
 
+/* edit question */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f9ff;
+    margin: 0;
+    padding: 0;
+}
+
+.edit-question-container {
+    width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.option-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-add_option {
+    background-color: #b17350;
+    color: white;
+}
+
+.btn-submit {
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+}
+
+.btn-delete-option {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-back {
+    margin-top: 20px;
+    background-color: #6c757d;
+    color: white;
+    width: 100%;
+}
+
 /* add category*/
 body {
     font-family: 'Segoe UI', sans-serif;
