@@ -4,8 +4,16 @@
 
 {% block body %}
 <div class="question-container">
-  <h1>Questions in this Category</h1>
-
+  <h1>Questions in Category:  {{ category.name }}</h1>
+  <div class="question-buttons">
+    <form action="{{ url_for('kuiz.create_question_form', category_id=category.id) }}" method="GET">
+      <button type="submit" class="btn btn-primary">➕ Create New Question</button>
+    </form>
+    <form action="{{ url_for('kuiz.show_categories') }}" method="GET">
+      <button type="submit" class="btn btn-secondary">⬅️ Back to Categories</button>
+    </form>
+  </div>
+  <br><br>
   <div class="question-list">
     {% if questions %}
       {% for question in questions %}
@@ -32,15 +40,6 @@
     {% else %}
     <p class="no-attempts">There are no questions in this category yet. Be the first to add a question!</p>
     {% endif %}
-  </div>
-
-  <div class="question-buttons">
-    <form action="{{ url_for('kuiz.create_question_form', category_id=category.id) }}" method="GET">
-      <button type="submit" class="btn btn-primary">➕ Create New Question</button>
-    </form>
-    <form action="{{ url_for('kuiz.show_categories') }}" method="GET">
-      <button type="submit" class="btn btn-secondary">⬅️ Back to Categories</button>
-    </form>
   </div>
 </div>
 {% endblock %}
